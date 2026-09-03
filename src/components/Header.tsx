@@ -16,6 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
   const navItems = [
     { key: 'home', label: lang === 'pt' ? 'Início' : 'Home' },
     { key: 'catalog', label: lang === 'pt' ? 'Explorar' : 'Explore' },
+    { key: 'inventory', label: lang === 'pt' ? 'Inventário' : 'Inventory' },
     { key: 'templates', label: lang === 'pt' ? 'Modelos' : 'Templates' },
     { key: 'guides', label: lang === 'pt' ? 'Guias' : 'Guides' },
     { key: 'security', label: lang === 'pt' ? 'Segurança' : 'Safety' },

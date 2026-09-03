@@ -14,6 +14,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
 
   const footerNav = [
     { label: lang === 'pt' ? 'Explorar famílias' : 'Explore families', screen: 'catalog' },
+    { label: lang === 'pt' ? 'Inventário comparativo' : 'Comparative inventory', screen: 'inventory' },
     { label: lang === 'pt' ? 'Modelos de documentação' : 'Documentation templates', screen: 'templates' },
     { label: lang === 'pt' ? 'Guias de laboratório' : 'Lab guides', screen: 'guides' },
     { label: lang === 'pt' ? 'Segurança e uso responsável' : 'Safety and responsible use', screen: 'security' }

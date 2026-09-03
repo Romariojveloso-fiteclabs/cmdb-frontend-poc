@@ -9,6 +9,7 @@ import { GuidesView } from './GuidesView';
 import { TemplatesView } from './TemplatesView';
 import { SecurityView } from './SecurityView';
 import { ContributeView } from './ContributeView';
+import { InventoryView } from './InventoryView';
 import { Lang } from '../data/families';
 
 export const AppContainer: React.FC = () => {
@@ -65,6 +66,10 @@ export const AppContainer: React.FC = () => {
             initialQuery={searchQuery}
             onOpenFamily={handleOpenFamily}
           />
+        )}
+
+        {screen === 'inventory' && (
+          <InventoryView lang={lang} onOpenFamily={handleOpenFamily} />
         )}
 
         {screen === 'family' && (

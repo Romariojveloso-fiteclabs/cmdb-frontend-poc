@@ -234,8 +234,13 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                       <td style={{ padding: '12px', verticalAlign: 'top', fontSize: '12.5px', color: '#B85C2E' }}>{f.cat}</td>
                       <td style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{f.plats.join(', ')}</td>
                       <td style={{ padding: '12px', verticalAlign: 'top' }}>{renderBadge('ed', f.ed)}</td>
-                      <td style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-color-secondary)' }}>
-                        {SAMPLE_SHAS[f.key] ? `${SAMPLE_SHAS[f.key]}…` : '—'}
+                      <td
+                        title={SAMPLE_SHAS[f.key]}
+                        style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-color-secondary)', whiteSpace: 'nowrap' }}
+                      >
+                        {SAMPLE_SHAS[f.key]
+                          ? `${SAMPLE_SHAS[f.key].slice(0, 10)}…${SAMPLE_SHAS[f.key].slice(-6)}`
+                          : '—'}
                       </td>
                       <td style={{ padding: '12px', verticalAlign: 'top', textAlign: 'right' }}>
                         <button
