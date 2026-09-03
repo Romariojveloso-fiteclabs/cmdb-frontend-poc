@@ -13,7 +13,7 @@ export const SecurityView: React.FC<SecurityViewProps> = ({ lang }) => {
   const securityDoc = parseGeneralDocFromMarkdown('security', lang);
 
   return (
-    <section style={{ maxWidth: '900px', margin: '0 auto', padding: '36px 28px 72px' }}>
+    <section className="page-shell" style={{ maxWidth: '900px', margin: '0 auto', padding: '36px 28px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
         {t.secTitle}
       </h1>
@@ -23,7 +23,7 @@ export const SecurityView: React.FC<SecurityViewProps> = ({ lang }) => {
 
       {securityDoc && (
         <article
-          className="markdown-body"
+          className="markdown-body content-panel"
           dangerouslySetInnerHTML={{ __html: securityDoc.htmlContent }}
           style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '32px', marginBottom: '24px' }}
         />
@@ -31,7 +31,7 @@ export const SecurityView: React.FC<SecurityViewProps> = ({ lang }) => {
 
       {disclaimerDoc && (
         <article
-          className="markdown-body"
+          className="markdown-body content-panel"
           dangerouslySetInnerHTML={{ __html: disclaimerDoc.htmlContent }}
           style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '32px' }}
         />

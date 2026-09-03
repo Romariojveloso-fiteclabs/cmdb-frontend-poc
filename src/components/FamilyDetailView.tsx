@@ -57,7 +57,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
 
   return (
     <div>
-      <section style={{ background: 'var(--surface-card)', borderBottom: '1px solid var(--surface-border)', padding: '28px 28px 0' }}>
+      <section className="family-header" style={{ background: 'var(--surface-card)', borderBottom: '1px solid var(--surface-border)', padding: '28px 28px 0' }}>
         <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
           <button
             onClick={() => onNavigate('catalog')}
@@ -66,7 +66,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
             {t.backCatalog}
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '32px', flexWrap: 'wrap' }}>
+          <div className="family-heading" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '32px', flexWrap: 'wrap' }}>
             <div>
               <h1 style={{ fontFamily: 'var(--font-mono)', fontSize: '38px', fontWeight: 600, letterSpacing: '.08em', margin: '0 0 8px' }}>
                 {fam.name}
@@ -102,7 +102,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '280px', background: 'var(--surface-ground)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '16px' }}>
+            <div className="family-status-card" style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '280px', background: 'var(--surface-ground)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '16px' }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '2px' }}>
                 {t.statusSystem}
               </div>
@@ -153,7 +153,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
         </div>
       </section>
 
-      <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '32px 28px 72px', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '32px', alignItems: 'start' }}>
+      <section className="family-content-layout" style={{ maxWidth: '1180px', margin: '0 auto', padding: '32px 28px 72px', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '32px', alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
           {activeTab === 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
@@ -174,7 +174,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                   {t.observedSub}
                 </p>
 
-                <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '1px', background: 'var(--surface-border)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
+                <ul className="family-observed-grid" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '1px', background: 'var(--surface-border)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
                   <li style={{ background: 'var(--surface-card)', padding: '14px 16px' }}>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '5px' }}>{lang === 'pt' ? 'Arquivos cifrados' : 'Encrypted files'}</div>
                     <div style={{ fontSize: '13.5px' }}>{lang === 'pt' ? 'Documentos e imagens do perfil do usuário' : 'Documents and images in user profile'}</div>
@@ -220,7 +220,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12.5px', wordBreak: 'break-all', background: 'var(--surface-ground)', border: '1px solid var(--surface-border)', borderRadius: '4px', padding: '9px 11px' }}>
                       {s.sha}
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '14px', marginTop: '14px' }}>
+                    <div className="family-sample-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '14px', marginTop: '14px' }}>
                       {s.fields.map((fd, i) => (
                         <div key={i}>
                           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9.5px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '4px' }}>{fd.label}</div>
@@ -252,7 +252,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
               </p>
 
               {evidenceList.length > 0 ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
+                <div className="family-evidence-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
                   {evidenceList.map((ev, idx) => (
                     <figure key={idx} style={{ margin: 0, background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
                       <div style={{ height: '220px', background: '#EFE6D5', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -298,7 +298,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
           )}
         </div>
 
-        <aside style={{ position: 'sticky', top: '96px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <aside className="family-sidebar" style={{ position: 'sticky', top: '96px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '10px' }}>
               {t.reportCard}

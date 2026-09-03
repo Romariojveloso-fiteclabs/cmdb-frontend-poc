@@ -24,7 +24,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
   };
 
   return (
-    <section style={{ maxWidth: '1000px', margin: '0 auto', padding: '36px 28px 72px' }}>
+    <section className="page-shell" style={{ maxWidth: '1000px', margin: '0 auto', padding: '36px 28px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
         {t.tplTitle}
       </h1>
@@ -39,7 +39,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
+      <div className="templates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
         {templates.map((tp) => (
           <article key={tp.id} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>

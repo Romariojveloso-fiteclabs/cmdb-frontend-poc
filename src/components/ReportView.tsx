@@ -45,8 +45,8 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lan
   ];
 
   return (
-    <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px', display: 'grid', gridTemplateColumns: '240px minmax(0, 1fr)', gap: '40px', alignItems: 'start' }}>
-      <aside style={{ position: 'sticky', top: '96px' }}>
+    <section className="report-layout" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px', display: 'grid', gridTemplateColumns: '240px minmax(0, 1fr)', gap: '40px', alignItems: 'start' }}>
+      <aside className="report-toc" style={{ position: 'sticky', top: '96px' }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '12px' }}>
           {t.toc}
         </div>
@@ -71,7 +71,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lan
         </ol>
       </aside>
 
-      <article style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '44px 52px' }}>
+      <article className="document-card" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '44px 52px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
           <span style={{ display: 'block', width: '3px', height: '14px', background: 'var(--ufpe-crimson)' }}></span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: '#B85C2E' }}>

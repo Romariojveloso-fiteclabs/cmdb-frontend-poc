@@ -1,0 +1,35 @@
+{
+  "id": "./",
+  "name": "Caatinga Malware DB",
+  "short_name": "CMDB",
+  "description": "Acervo acadêmico de documentação e pesquisa defensiva sobre famílias de malware.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#F3EBDD",
+  "theme_color": "#243A2E",
+  "categories": ["education", "security", "reference"],
+  "icons": [
+    {
+      "src": "assets/cmdb-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/cmdb-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/cmdb-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

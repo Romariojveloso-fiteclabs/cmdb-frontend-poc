@@ -40,6 +40,12 @@ https://romariojveloso-fiteclabs.github.io/cmdb-frontend-poc/
 
 Os caminhos de recursos respeitam o prefixo `/cmdb-frontend-poc`, configurado em `astro.config.mjs`.
 
+## Aplicativo mobile (PWA)
+
+O site é responsivo e pode ser instalado como aplicativo em navegadores compatíveis. No Android ou em navegadores Chromium, use o botão **Instalar** exibido no cabeçalho. No iPhone e no iPad, abra o menu de compartilhamento do Safari e selecione **Adicionar à Tela de Início**.
+
+O PWA inclui manifest, ícones próprios e um service worker com suporte offline para a interface e para os recursos já visitados. A instalação e o cache offline exigem HTTPS, fornecido automaticamente pelo GitHub Pages.
+
 ## Aviso de segurança
 
 Este frontend publica somente conteúdo acadêmico e defensivo, como relatórios, hashes, indicadores e imagens. O processo de build remove arquivos ZIP do diretório de publicação para impedir a disponibilização de amostras executáveis ou pacotes de malware no GitHub Pages.

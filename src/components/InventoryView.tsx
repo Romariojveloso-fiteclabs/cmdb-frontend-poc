@@ -192,14 +192,14 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
   );
 
   return (
-    <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
+    <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>{t.title}</h1>
       <p style={{ fontSize: '14.5px', color: 'var(--text-color-secondary)', margin: '0 0 24px', maxWidth: '70ch', lineHeight: 1.6 }}>
         {t.subtitle}
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '272px minmax(0, 1fr)', gap: '24px', alignItems: 'start' }}>
-        <aside style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px', position: 'sticky', top: '88px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="responsive-split" style={{ display: 'grid', gridTemplateColumns: '272px minmax(0, 1fr)', gap: '24px', alignItems: 'start' }}>
+        <aside className="filters-panel" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px', position: 'sticky', top: '88px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ position: 'relative' }}>
             <input
               type="search"
@@ -274,7 +274,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
         </aside>
 
         <div style={{ minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '14px' }}>
+          <div className="results-toolbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '14px' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-color-secondary)' }}>
               {filteredRecords.length} {t.results}
             </span>

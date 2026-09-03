@@ -21,11 +21,11 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
   ];
 
   return (
-    <footer style={{ background: '#202522', color: '#A89A82', padding: '44px 28px 28px', borderTop: '3px solid var(--ufpe-crimson)' }}>
+    <footer className="site-footer" style={{ background: '#202522', color: '#A89A82', padding: '44px 28px 28px', borderTop: '3px solid var(--ufpe-crimson)' }}>
       <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.1fr)', gap: '44px' }}>
+        <div className="site-footer__grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.1fr)', gap: '44px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+            <div className="site-footer__brand" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: '#F3EBDD', borderRadius: '5px', flex: 'none' }}>
                 <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '34px', height: '34px', objectFit: 'contain', display: 'block' }} />
               </span>
@@ -36,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 <img src={withBase('/assets/ufpe-brasao.png')} alt="Brasão da UFPE" style={{ width: '30px', height: '30px', objectFit: 'contain', display: 'block' }} />
               </span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.1em', color: '#D39A32', border: '1px solid #5C564A', borderRadius: '3px', padding: '3px 7px' }}>
-                UFPE · CIn
+                UFPE - CTG
               </span>
             </div>
             <div style={{ fontSize: '12.5px', lineHeight: 1.65, maxWidth: '52ch' }}>
@@ -80,19 +80,19 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
               {t.footerContactTitle}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '11px' }}>
-              <a href="https://sites.ufpe.br/seguranca-ofensiva/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
+              <a className="site-footer__link" href="https://sites.ufpe.br/seguranca-ofensiva/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
                 <span style={{ display: 'flex', color: '#D39A32' }}><Globe size={15} /></span>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>sites.ufpe.br/seguranca-ofensiva</span>
               </a>
-              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
+              <a className="site-footer__link" href="https://github.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
                 <span style={{ display: 'flex', color: '#D39A32' }}><Github size={15} /></span>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{lang === 'pt' ? 'GitHub — repositório do acervo' : 'GitHub — archive repository'}</span>
               </a>
-              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
+              <a className="site-footer__link" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
                 <span style={{ display: 'flex', color: '#D39A32' }}><Linkedin size={15} /></span>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>LinkedIn</span>
               </a>
-              <a href="mailto:contato@cin.ufpe.br" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
+              <a className="site-footer__link" href="mailto:contato@cin.ufpe.br" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
                 <span style={{ display: 'flex', color: '#D39A32' }}><Mail size={15} /></span>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>contato@cin.ufpe.br</span>
               </a>
@@ -102,7 +102,12 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
 
         <div style={{ borderTop: '1px solid #403C34', marginTop: '32px', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap', fontFamily: 'var(--font-mono)', fontSize: '11.5px' }}>
           <span>{t.footerRights}</span>
-          <span>{t.footerLicense} · {t.footerContact}</span>
+          <span>
+            {t.footerDevelopedBy}:{' '}
+            <a href="https://romariojonas.com" target="_blank" rel="noopener noreferrer" style={{ color: '#D39A32' }}>
+              Romário Jonas
+            </a>
+          </span>
         </div>
       </div>
     </footer>

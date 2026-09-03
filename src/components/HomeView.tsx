@@ -87,14 +87,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
 
   return (
     <div>
-      <section style={{ background: '#243A2E', color: '#F3EBDD', padding: '72px 28px 64px' }}>
-        <div style={{ maxWidth: '1180px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 1fr)', gap: '64px', alignItems: 'stretch' }}>
+      <section className="home-hero" style={{ background: '#243A2E', color: '#F3EBDD', padding: '72px 28px 64px' }}>
+        <div className="home-hero-grid" style={{ maxWidth: '1180px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 1fr)', gap: '64px', alignItems: 'stretch' }}>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.18em', color: '#D39A32', marginBottom: '18px' }}>
                 {t.eyebrow}
               </div>
-              <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '42px', lineHeight: 1.24, fontWeight: 600, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <h1 className="home-hero-title" style={{ fontFamily: 'var(--font-accent)', fontSize: '42px', lineHeight: 1.24, fontWeight: 600, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 {heroLines.map((ln, idx) => (
                   <span key={idx} style={{ whiteSpace: 'nowrap' }}>{ln}</span>
                 ))}
@@ -156,7 +156,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.16em', color: '#D39A32', marginBottom: '14px' }}>
                 {t.searchLabel}
               </div>
-              <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px' }}>
+              <form className="home-search-form" onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px' }}>
                 <input
                   type="text"
                   value={queryInput}
@@ -228,7 +228,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
       </section>
 
       <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '8px 28px 48px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '1px', background: 'var(--surface-border)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
+        <div className="home-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '1px', background: 'var(--surface-border)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
           {stats.map((s, idx) => (
             <div key={idx} style={{ background: 'var(--surface-card)', padding: '22px 24px' }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '34px', fontWeight: 500, color: '#243A2E', lineHeight: 1 }}>
@@ -243,7 +243,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
       </section>
 
       <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '0 28px 56px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '20px' }}>
+        <div className="section-heading-row" style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '16px', marginBottom: '20px' }}>
           <h2 style={{ fontFamily: 'var(--font-accent)', fontSize: '26px', fontWeight: 600, margin: 0 }}>
             {t.recentTitle}
           </h2>
@@ -252,7 +252,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
           </button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px' }}>
+        <div className="home-family-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px' }}>
           {featuredFamilies.map((f) => (
             <article key={f.key} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
@@ -321,7 +321,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
             {t.flowSub}
           </p>
 
-          <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
+          <ol className="home-steps-grid" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
             {steps.map((st, idx) => (
               <li key={idx} style={{ borderTop: '2px solid #D39A32', paddingTop: '14px' }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#B85C2E', marginBottom: '8px' }}>
@@ -339,7 +339,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
         </div>
       </section>
 
-      <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '52px 28px 72px', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '20px' }}>
+      <section className="home-actions-grid" style={{ maxWidth: '1180px', margin: '0 auto', padding: '52px 28px 72px', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '20px' }}>
         <div style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '26px' }}>
           <h3 style={{ fontFamily: 'var(--font-accent)', fontSize: '21px', fontWeight: 600, margin: '0 0 10px' }}>
             {t.contribTitle}

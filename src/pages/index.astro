@@ -2,18 +2,43 @@
 import { AppContainer } from '../components/AppContainer';
 import { withBase } from '../utils/paths';
 import '../styles/global.css';
+
+const manifestUrl = withBase('/manifest.webmanifest');
+const serviceWorkerUrl = withBase('/sw.js');
+const serviceWorkerScope = withBase('/');
 ---
 
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Caatinga Malware DB · Acervo Acadêmico de Evidências · UFPE</title>
     <meta name="description" content="Acervo acadêmico de evidências, experimentos controlados e relatórios técnicos sobre ransomware e malwares desenvolvidos pela comunidade da UFPE." />
+    <meta name="theme-color" content="#243A2E" />
+    <meta name="color-scheme" content="light" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CMDB" />
     <link rel="icon" type="image/png" href={withBase('/assets/cmdb-logo.png')} />
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase('/assets/cmdb-apple-touch-icon.png')} />
+    <link rel="manifest" href={manifestUrl} />
   </head>
   <body>
     <AppContainer client:only="react" />
+    <script is:inline define:vars={{ serviceWorkerUrl, serviceWorkerScope }}>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          const isAstroDevServer = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+            && window.location.port === '4321';
+          if (isAstroDevServer) return;
+
+          navigator.serviceWorker.register(serviceWorkerUrl, { scope: serviceWorkerScope }).catch(() => {
+            // The site remains fully usable when service workers are unavailable.
+          });
+        });
+      }
+    </script>
   </body>
 </html>

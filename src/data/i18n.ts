@@ -4,7 +4,7 @@ export const TRANSLATIONS = {
   pt: {
     brandName: 'CAATINGA MALWARE DB',
     brandSub: 'Segurança Ofensiva · UFPE',
-    footerInstitution: 'Comunidade de Segurança Ofensiva · CIn — UFPE',
+    footerInstitution: 'Comunidade de Segurança Ofensiva · UFPE - CTG',
     footerNavTitle: 'Navegação do acervo',
     footerContactTitle: 'Contato e redes',
     footerRights: '© 2026 Caatinga Malware DB · Grupo de Segurança Ofensiva · Universidade Federal de Pernambuco',
@@ -72,13 +72,12 @@ export const TRANSLATIONS = {
     criteriaTitle: 'Critérios de aceitação',
     criteriaSub: 'Uma submissão sem procedência ou sem limitações declaradas volta para revisão.',
     footerNote: 'Projeto acadêmico da comunidade de Segurança Ofensiva da UFPE. Documentação de pesquisa, não distribuição de artefatos.',
-    footerLicense: 'Conteúdo acadêmico · uso educacional',
-    footerContact: 'PT · EN — conteúdos equivalentes'
+    footerDevelopedBy: 'Desenvolvido por'
   },
   en: {
     brandName: 'CAATINGA MALWARE DB',
     brandSub: 'Offensive Security · UFPE',
-    footerInstitution: 'Offensive Security community · CIn — UFPE',
+    footerInstitution: 'Offensive Security community · UFPE - CTG',
     footerNavTitle: 'Archive navigation',
     footerContactTitle: 'Contact and links',
     footerRights: '© 2026 Caatinga Malware DB · Offensive Security Group · Federal University of Pernambuco',
@@ -146,7 +145,6 @@ export const TRANSLATIONS = {
     criteriaTitle: 'Acceptance criteria',
     criteriaSub: 'A submission without provenance or declared limitations goes back for revision.',
     footerNote: 'Academic project of the UFPE Offensive Security community. Research documentation, not artefact distribution.',
-    footerLicense: 'Academic content · educational use',
-    footerContact: 'PT · EN — equivalent content'
+    footerDevelopedBy: 'Developed by'
   }
 };

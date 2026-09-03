@@ -78,7 +78,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
   });
 
   return (
-    <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
+    <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
         {t.catalogTitle}
       </h1>
@@ -86,8 +86,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
         {t.catalogSub}
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '272px minmax(0, 1fr)', gap: '24px', alignItems: 'start' }}>
-        <aside style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px', position: 'sticky', top: '88px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="responsive-split" style={{ display: 'grid', gridTemplateColumns: '272px minmax(0, 1fr)', gap: '24px', alignItems: 'start' }}>
+        <aside className="filters-panel" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px', position: 'sticky', top: '88px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ position: 'relative' }}>
             <input
               type="text"
@@ -166,7 +166,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
         </aside>
 
         <div style={{ minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '14px' }}>
+          <div className="results-toolbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '14px' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-color-secondary)' }}>
               {filteredFamilies.length} {lang === 'pt' ? 'resultados encontrados' : 'results found'}
             </span>
@@ -256,7 +256,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
               </table>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
+            <div className="catalog-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
               {paginatedFamilies.map((f) => (
                 <article key={f.key} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>

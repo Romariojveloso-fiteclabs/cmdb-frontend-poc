@@ -19,7 +19,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
 
   if (selectedGuide) {
     return (
-      <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
+      <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
         <button
           onClick={() => setSelectedGuideId(null)}
           style={{
@@ -40,7 +40,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
           {lang === 'pt' ? 'Voltar para a lista de guias' : 'Back to guides list'}
         </button>
 
-        <article style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '44px 52px' }}>
+        <article className="document-card" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '44px 52px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
             <span style={{ display: 'block', width: '3px', height: '14px', background: '#B85C2E' }}></span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: '#B85C2E' }}>
@@ -74,7 +74,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
   }
 
   return (
-    <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
+    <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
         {t.guidesPageTitle}
       </h1>
@@ -82,7 +82,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
         {t.guidesPageSub}
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+      <div className="guides-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
         {guidesList.map((g) => (
           <article
             key={g.id}
