@@ -1,6 +1,7 @@
 import React from 'react';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
+import { withBase } from '../utils/paths';
 
 interface HeaderProps {
   currentScreen: string;
@@ -31,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
           onClick={() => onNavigate('home')}
         >
           <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', background: '#F3EBDD', borderRadius: '5px', flex: 'none' }}>
-            <img src="/assets/cmdb-logo.png" alt="Caatinga Malware DB" style={{ width: '32px', height: '32px', objectFit: 'contain', display: 'block' }} />
+            <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '32px', height: '32px', objectFit: 'contain', display: 'block' }} />
           </span>
           <span style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.15' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, letterSpacing: '.14em' }}>

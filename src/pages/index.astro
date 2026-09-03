@@ -1,5 +1,6 @@
 ---
 import { AppContainer } from '../components/AppContainer';
+import { withBase } from '../utils/paths';
 import '../styles/global.css';
 ---
 
@@ -10,7 +11,7 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Caatinga Malware DB · Acervo Acadêmico de Evidências · UFPE</title>
     <meta name="description" content="Acervo acadêmico de evidências, experimentos controlados e relatórios técnicos sobre ransomware e malwares desenvolvidos pela comunidade da UFPE." />
-    <link rel="icon" type="image/png" href="/assets/cmdb-logo.png" />
+    <link rel="icon" type="image/png" href={withBase('/assets/cmdb-logo.png')} />
   </head>
   <body>
     <AppContainer client:only="react" />

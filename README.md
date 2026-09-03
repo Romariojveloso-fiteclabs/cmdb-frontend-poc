@@ -17,7 +17,7 @@ npm install
 npm run dev
 ```
 
-A aplicação estará disponível, por padrão, em `http://localhost:4321`.
+A aplicação estará disponível em `http://localhost:4321/cmdb-frontend-poc/`.
 
 ## Gerar a versão de produção
 
@@ -28,18 +28,21 @@ npm run preview
 
 Os arquivos estáticos serão gerados no diretório `dist/`.
 
-## Publicação
+## Publicação no GitHub Pages
 
-O projeto pode ser publicado em serviços de hospedagem estática, como Cloudflare Pages ou GitHub Pages. Para Cloudflare Pages, use:
+O workflow em `.github/workflows/deploy.yml` gera e publica o site automaticamente após cada push na branch `main`.
+
+No GitHub, abra **Settings → Pages** e selecione **GitHub Actions** em **Source**. O site será publicado em:
 
 ```text
-Build command: npm run build
-Output directory: dist
+https://romariojveloso-fiteclabs.github.io/cmdb-frontend-poc/
 ```
+
+Os caminhos de recursos respeitam o prefixo `/cmdb-frontend-poc`, configurado em `astro.config.mjs`.
 
 ## Aviso de segurança
 
-Este frontend deve publicar somente conteúdo acadêmico e defensivo, como relatórios, hashes, indicadores e imagens. Não disponibilize amostras executáveis ou pacotes de malware em hospedagens públicas.
+Este frontend publica somente conteúdo acadêmico e defensivo, como relatórios, hashes, indicadores e imagens. O processo de build remove arquivos ZIP do diretório de publicação para impedir a disponibilização de amostras executáveis ou pacotes de malware no GitHub Pages.
 
 ## Status
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Globe, Github, Linkedin, Mail } from 'lucide-react';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
+import { withBase } from '../utils/paths';
 
 interface FooterProps {
   lang: Lang;
@@ -25,13 +26,13 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: '#F3EBDD', borderRadius: '5px', flex: 'none' }}>
-                <img src="/assets/cmdb-logo.png" alt="Caatinga Malware DB" style={{ width: '34px', height: '34px', objectFit: 'contain', display: 'block' }} />
+                <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '34px', height: '34px', objectFit: 'contain', display: 'block' }} />
               </span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '.14em', color: '#F3EBDD' }}>
                 CAATINGA MALWARE DB
               </span>
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: '#F3EBDD', borderRadius: '5px', flex: 'none' }}>
-                <img src="/assets/ufpe-brasao.png" alt="Brasão da UFPE" style={{ width: '30px', height: '30px', objectFit: 'contain', display: 'block' }} />
+                <img src={withBase('/assets/ufpe-brasao.png')} alt="Brasão da UFPE" style={{ width: '30px', height: '30px', objectFit: 'contain', display: 'block' }} />
               </span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.1em', color: '#D39A32', border: '1px solid #5C564A', borderRadius: '3px', padding: '3px 7px' }}>
                 UFPE · CIn

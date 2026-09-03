@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, ShieldCheck, FilePlus, BookOpen, AlertTriangle } from 'lucide-react';
 import { FAMILIES, DIMENSIONS, Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
+import { withBase } from '../utils/paths';
 
 interface HomeViewProps {
   lang: Lang;
@@ -148,7 +149,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E0D4BE', borderRadius: '6px', padding: '16px 28px', background: '#F3EBDD' }}>
-              <img src="/assets/cmdb-logo.png" alt="Caatinga Malware DB" style={{ width: '100%', maxWidth: '300px', height: '196px', objectFit: 'contain', display: 'block' }} />
+              <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '100%', maxWidth: '300px', height: '196px', objectFit: 'contain', display: 'block' }} />
             </div>
 
             <div style={{ background: 'rgba(243,235,221,.06)', border: '1px solid #537760', borderRadius: '6px', padding: '24px' }}>

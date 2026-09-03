@@ -1,5 +1,6 @@
 import { marked } from 'marked';
 import { Lang } from './families';
+import { withBase } from '../utils/paths';
 
 export interface DynamicSample {
   id: string;
@@ -79,10 +80,10 @@ function resolveImageUrls(markdownText: string, familyKey: string): string {
     let cleanSrc = src.trim();
     if (cleanSrc.includes('/img/')) {
       const fileName = cleanSrc.split('/img/').pop();
-      cleanSrc = `/reports/${familyKey}/img/${fileName}`;
+      cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     } else if (cleanSrc.startsWith('img/')) {
       const fileName = cleanSrc.replace('img/', '');
-      cleanSrc = `/reports/${familyKey}/img/${fileName}`;
+      cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     }
     return `![${alt}](${cleanSrc})`;
   });
@@ -91,10 +92,10 @@ function resolveImageUrls(markdownText: string, familyKey: string): string {
     let cleanSrc = src.trim();
     if (cleanSrc.includes('/img/')) {
       const fileName = cleanSrc.split('/img/').pop();
-      cleanSrc = `/reports/${familyKey}/img/${fileName}`;
+      cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     } else if (cleanSrc.startsWith('img/')) {
       const fileName = cleanSrc.replace('img/', '');
-      cleanSrc = `/reports/${familyKey}/img/${fileName}`;
+      cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     }
     return `<img ${before}src="${cleanSrc}"${after}>`;
   });
@@ -185,10 +186,10 @@ function extractEvidencesFromMarkdown(markdownText: string, familyKey: string): 
     let imgSrc = match[2].trim();
     if (imgSrc.includes('/img/')) {
       const fileName = imgSrc.split('/img/').pop();
-      imgSrc = `/reports/${familyKey}/img/${fileName}`;
+      imgSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     } else if (imgSrc.startsWith('img/')) {
       const fileName = imgSrc.replace('img/', '');
-      imgSrc = `/reports/${familyKey}/img/${fileName}`;
+      imgSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     }
 
     if (!evidences.some(e => e.imgUrl === imgSrc)) {
@@ -209,10 +210,10 @@ function extractEvidencesFromMarkdown(markdownText: string, familyKey: string): 
     let imgSrc = match[2].trim();
     if (imgSrc.includes('/img/')) {
       const fileName = imgSrc.split('/img/').pop();
-      imgSrc = `/reports/${familyKey}/img/${fileName}`;
+      imgSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     } else if (imgSrc.startsWith('img/')) {
       const fileName = imgSrc.replace('img/', '');
-      imgSrc = `/reports/${familyKey}/img/${fileName}`;
+      imgSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
     }
 
     if (!evidences.some(e => e.imgUrl === imgSrc)) {
