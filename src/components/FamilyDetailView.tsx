@@ -38,12 +38,12 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
     if (!meta) return null;
     const label = lang === 'pt' ? meta.pt : meta.en;
 
-    let bg = '#EFE6D5';
-    let color = '#403C34';
-    if (meta.sev === 'success') { bg = '#E8F0E9'; color = '#3C6549'; }
-    if (meta.sev === 'info') { bg = '#F7E9DF'; color = '#9C4B23'; }
-    if (meta.sev === 'warning') { bg = '#FAF0DA'; color = '#A9761F'; }
-    if (meta.sev === 'danger') { bg = '#FBE8E6'; color = '#8F1B12'; }
+    let bg = 'var(--surface-100)';
+    let color = 'var(--text-color-secondary)';
+    if (meta.sev === 'success') { bg = 'var(--success-soft)'; color = 'var(--success-600)'; }
+    if (meta.sev === 'info') { bg = 'var(--info-soft)'; color = 'var(--info-600)'; }
+    if (meta.sev === 'warning') { bg = 'var(--warning-soft)'; color = 'var(--warning-600)'; }
+    if (meta.sev === 'danger') { bg = 'var(--danger-soft)'; color = 'var(--danger-600)'; }
 
     return (
       <span style={{ background: bg, color: color, fontSize: '11px', fontFamily: 'var(--font-sans)', padding: '2px 8px', borderRadius: '4px', fontWeight: 500 }}>
@@ -61,7 +61,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
         <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
           <button
             onClick={() => onNavigate('catalog')}
-            style={{ background: 'none', border: 'none', padding: 0, color: '#9C4B23', fontFamily: 'var(--font-mono)', fontSize: '11.5px', cursor: 'pointer', marginBottom: '16px' }}
+            style={{ background: 'none', border: 'none', padding: 0, color: 'var(--info-600)', fontFamily: 'var(--font-mono)', fontSize: '11.5px', cursor: 'pointer', marginBottom: '16px' }}
           >
             {t.backCatalog}
           </button>
@@ -135,12 +135,12 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                   style={{
                     background: 'none',
                     border: 'none',
-                    borderBottom: active ? '3px solid #243A2E' : '3px solid transparent',
+                    borderBottom: active ? '3px solid var(--primary-color)' : '3px solid transparent',
                     padding: '10px 16px',
                     fontFamily: 'var(--font-sans)',
                     fontSize: '13.5px',
                     fontWeight: active ? 600 : 500,
-                    color: active ? '#243A2E' : 'var(--text-color-secondary)',
+                    color: active ? 'var(--primary-color)' : 'var(--text-color-secondary)',
                     cursor: 'pointer',
                     whiteSpace: 'nowrap'
                   }}
@@ -213,10 +213,10 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                 {sampleList.map((s) => (
                   <div key={s.id} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginBottom: '14px' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 600, color: '#B85C2E' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 600, color: 'var(--info-color)' }}>
                         {s.id}
                       </span>
-                      <span style={{ background: s.verifySeverity === 'success' ? '#E8F0E9' : '#FAF0DA', color: s.verifySeverity === 'success' ? '#3C6549' : '#A9761F', fontSize: '11px', padding: '2px 8px', borderRadius: '4px', fontWeight: 500 }}>
+                      <span style={{ background: s.verifySeverity === 'success' ? 'var(--success-soft)' : 'var(--warning-soft)', color: s.verifySeverity === 'success' ? 'var(--success-600)' : 'var(--warning-600)', fontSize: '11px', padding: '2px 8px', borderRadius: '4px', fontWeight: 500 }}>
                         {s.verifyLabel}
                       </span>
                     </div>
@@ -239,7 +239,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                 ))}
               </div>
 
-              <div style={{ marginTop: '16px', background: '#FBE8E6', border: '1px solid #B42318', color: '#8F1B12', padding: '14px 18px', borderRadius: '6px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ marginTop: '16px', background: 'var(--danger-soft)', border: '1px solid var(--danger-color)', color: 'var(--danger-600)', padding: '14px 18px', borderRadius: '6px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <AlertOctagon size={18} style={{ flexShrink: 0 }} />
                 <span>{t.noDownload}</span>
               </div>
@@ -259,11 +259,11 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                 <div className="family-evidence-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
                   {evidenceList.map((ev, idx) => (
                     <figure key={idx} style={{ margin: 0, background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
-                      <div style={{ height: '220px', background: '#EFE6D5', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                      <div style={{ height: '220px', background: 'var(--surface-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                         <img src={ev.imgUrl} alt={ev.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <figcaption style={{ padding: '14px 16px' }}>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', color: '#B85C2E', marginBottom: '6px' }}>{ev.figNum}</div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', color: 'var(--info-color)', marginBottom: '6px' }}>{ev.figNum}</div>
                         <div style={{ fontSize: '13.5px', fontWeight: 600, marginBottom: '5px' }}>{ev.title}</div>
                         <div style={{ fontSize: '12.5px', color: 'var(--text-color-secondary)', lineHeight: 1.55 }}>{ev.desc}</div>
                       </figcaption>
@@ -286,15 +286,15 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
 
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--surface-border)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
                 <li style={{ background: 'var(--surface-card)', padding: '14px 16px', display: 'flex', gap: '14px', alignItems: 'baseline' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#B85C2E', whiteSpace: 'nowrap' }}>DEFENSIVA</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--info-color)', whiteSpace: 'nowrap' }}>DEFENSIVA</span>
                   <span style={{ fontSize: '13.5px', lineHeight: 1.55 }}>CISA Alert & Advisory — Indicadores e mitigações oficiais.</span>
                 </li>
                 <li style={{ background: 'var(--surface-card)', padding: '14px 16px', display: 'flex', gap: '14px', alignItems: 'baseline' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#B85C2E', whiteSpace: 'nowrap' }}>MITRE ATT&CK</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--info-color)', whiteSpace: 'nowrap' }}>MITRE ATT&CK</span>
                   <span style={{ fontSize: '13.5px', lineHeight: 1.55 }}>T1486 (Data Encrypted for Impact) e T1490 (Inhibit System Recovery).</span>
                 </li>
                 <li style={{ background: 'var(--surface-card)', padding: '14px 16px', display: 'flex', gap: '14px', alignItems: 'baseline' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#B85C2E', whiteSpace: 'nowrap' }}>INTERNA</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--info-color)', whiteSpace: 'nowrap' }}>INTERNA</span>
                   <span style={{ fontSize: '13.5px', lineHeight: 1.55 }}>CMDB-LG-002 — Guia de preparação de laboratório isolado UFPE.</span>
                 </li>
               </ul>
@@ -317,8 +317,8 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
               onClick={() => onOpenReport(fam.report, fam.key)}
               style={{
                 width: '100%',
-                background: '#243A2E',
-                color: '#F3EBDD',
+                background: 'var(--primary-color)',
+                color: 'var(--primary-color-text)',
                 border: 'none',
                 borderRadius: '4px',
                 padding: '10px 14px',

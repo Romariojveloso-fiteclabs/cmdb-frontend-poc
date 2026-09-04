@@ -26,7 +26,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lan
         </h2>
         <button
           onClick={() => onNavigate('catalog')}
-          style={{ background: '#243A2E', color: '#F3EBDD', border: 'none', padding: '10px 18px', borderRadius: '4px', cursor: 'pointer', marginTop: '16px' }}
+          style={{ background: 'var(--primary-color)', color: 'var(--primary-color-text)', border: 'none', padding: '10px 18px', borderRadius: '4px', cursor: 'pointer', marginTop: '16px' }}
         >
           {t.backCatalog}
         </button>
@@ -65,7 +65,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lan
       <article className="document-card" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '44px 52px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
           <span style={{ display: 'block', width: '3px', height: '14px', background: 'var(--ufpe-crimson)' }}></span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: '#B85C2E' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: 'var(--info-color)' }}>
             {familyData.report}
           </span>
         </div>

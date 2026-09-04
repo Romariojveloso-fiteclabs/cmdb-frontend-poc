@@ -25,7 +25,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
           style={{
             background: 'none',
             border: 'none',
-            color: '#9C4B23',
+            color: 'var(--info-600)',
             fontFamily: 'var(--font-mono)',
             fontSize: '12.5px',
             fontWeight: 600,
@@ -42,8 +42,8 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
 
         <article className="document-card" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '44px 52px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-            <span style={{ display: 'block', width: '3px', height: '14px', background: '#B85C2E' }}></span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: '#B85C2E' }}>
+            <span style={{ display: 'block', width: '3px', height: '14px', background: 'var(--info-color)' }}></span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: 'var(--info-color)' }}>
               {selectedGuide.id} · {selectedGuide.level}
             </span>
           </div>
@@ -100,10 +100,10 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.12em', color: '#B85C2E' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.12em', color: 'var(--info-color)' }}>
                 {g.id}
               </span>
-              <span style={{ background: '#E8F0E9', color: '#3C6549', fontSize: '11px', padding: '2px 8px', borderRadius: '4px', fontWeight: 500 }}>
+              <span style={{ background: 'var(--success-soft)', color: 'var(--success-600)', fontSize: '11px', padding: '2px 8px', borderRadius: '4px', fontWeight: 500 }}>
                 {g.level}
               </span>
             </div>
@@ -124,8 +124,8 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
                   setSelectedGuideId(g.id);
                 }}
                 style={{
-                  background: '#243A2E',
-                  color: '#F3EBDD',
+                  background: 'var(--primary-color)',
+                  color: 'var(--primary-color-text)',
                   border: 'none',
                   borderRadius: '4px',
                   padding: '7px 14px',

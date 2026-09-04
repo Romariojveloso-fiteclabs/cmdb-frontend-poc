@@ -17,7 +17,7 @@ const serviceWorkerScope = withBase('/');
     <title>Caatinga Malware DB · Acervo Acadêmico de Evidências · UFPE</title>
     <meta name="description" content="Acervo acadêmico de evidências, experimentos controlados e relatórios técnicos sobre ransomware e malwares desenvolvidos pela comunidade da UFPE." />
     <meta name="theme-color" content="#243A2E" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -25,6 +25,20 @@ const serviceWorkerScope = withBase('/');
     <link rel="icon" type="image/png" href={withBase('/assets/cmdb-logo.png')} />
     <link rel="apple-touch-icon" sizes="180x180" href={withBase('/assets/cmdb-apple-touch-icon.png')} />
     <link rel="manifest" href={manifestUrl} />
+    <script is:inline>
+      (() => {
+        const savedTheme = localStorage.getItem('cmdb-theme');
+        const theme = savedTheme === 'light' || savedTheme === 'dark'
+          ? savedTheme
+          : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute(
+          'content',
+          theme === 'dark' ? '#14211A' : '#243A2E'
+        );
+      })();
+    </script>
   </head>
   <body>
     <AppContainer client:only="react" />

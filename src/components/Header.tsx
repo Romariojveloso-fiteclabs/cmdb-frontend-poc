@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, Moon, Sun, X } from 'lucide-react';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
 import { withBase } from '../utils/paths';
@@ -9,9 +9,11 @@ interface HeaderProps {
   lang: Lang;
   onNavigate: (screen: string) => void;
   onSetLang: (lang: Lang) => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate, onSetLang }) => {
+export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate, onSetLang, theme, onToggleTheme }) => {
   const t = TRANSLATIONS[lang];
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -33,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
   };
 
   return (
-    <header className="site-header" style={{ position: 'sticky', top: 0, zIndex: 30, background: '#243A2E', color: '#F3EBDD', borderBottom: '3px solid #B85C2E' }}>
+    <header className="site-header" style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--header-background)', color: 'var(--header-text)', borderBottom: '3px solid var(--info-color)' }}>
       <div className="site-header__inner" style={{ maxWidth: '1180px', margin: '0 auto', padding: '14px 28px', display: 'flex', alignItems: 'center', gap: '28px' }}>
         <button
           type="button"
@@ -41,14 +43,14 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
           style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: 0, border: 0, background: 'transparent', color: 'inherit', textAlign: 'left' }}
           onClick={() => navigate('home')}
         >
-          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', background: '#F3EBDD', borderRadius: '5px', flex: 'none' }}>
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', background: 'var(--header-logo-background)', borderRadius: '5px', flex: 'none' }}>
             <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '32px', height: '32px', objectFit: 'contain', display: 'block' }} />
           </span>
           <span className="site-brand__text" style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.15' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, letterSpacing: '.14em' }}>
               {t.brandName}
             </span>
-            <span style={{ fontSize: '11px', color: '#B4C8B9', letterSpacing: '.04em' }}>
+            <span style={{ fontSize: '11px', color: 'var(--header-muted)', letterSpacing: '.04em' }}>
               {t.brandSub}
             </span>
           </span>
@@ -62,8 +64,8 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
                 key={item.key}
                 onClick={() => navigate(item.key)}
                 style={{
-                  background: isActive ? 'rgba(243,235,221,.14)' : 'transparent',
-                  color: isActive ? '#F3EBDD' : '#B4C8B9',
+                  background: isActive ? 'var(--header-active-background)' : 'transparent',
+                  color: isActive ? 'var(--header-text)' : 'var(--header-muted)',
                   border: 'none',
                   borderRadius: '4px',
                   padding: '7px 11px',
@@ -91,12 +93,12 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
               fontFamily: 'var(--font-mono)',
               fontSize: '12px',
               fontWeight: 600,
-              color: lang === 'pt' ? '#D39A32' : '#537760'
+              color: lang === 'pt' ? 'var(--warning-color)' : 'var(--header-muted)'
             }}
           >
             PT
           </button>
-          <span style={{ color: '#537760' }}>/</span>
+          <span style={{ color: 'var(--header-muted)' }}>/</span>
           <button
             onClick={() => onSetLang('en')}
             style={{
@@ -107,10 +109,24 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
               fontFamily: 'var(--font-mono)',
               fontSize: '12px',
               fontWeight: 600,
-              color: lang === 'en' ? '#D39A32' : '#537760'
+              color: lang === 'en' ? 'var(--warning-color)' : 'var(--header-muted)'
             }}
           >
             EN
+          </button>
+          <button
+            type="button"
+            className="site-theme-toggle"
+            onClick={onToggleTheme}
+            aria-pressed={theme === 'dark'}
+            aria-label={theme === 'dark'
+              ? (lang === 'pt' ? 'Ativar modo claro' : 'Switch to light mode')
+              : (lang === 'pt' ? 'Ativar modo escuro' : 'Switch to dark mode')}
+            title={theme === 'dark'
+              ? (lang === 'pt' ? 'Modo claro' : 'Light mode')
+              : (lang === 'pt' ? 'Modo escuro' : 'Dark mode')}
+          >
+            {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
           </button>
           <button
             type="button"
@@ -121,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
             aria-label={menuOpen
               ? (lang === 'pt' ? 'Fechar menu de navegação' : 'Close navigation menu')
               : (lang === 'pt' ? 'Abrir menu de navegação' : 'Open navigation menu')}
-            style={{ background: 'rgba(243,235,221,.1)', color: '#F3EBDD', border: '1px solid #537760', borderRadius: '4px', width: '38px', height: '38px', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+            style={{ background: 'var(--header-active-background)', color: 'var(--header-text)', border: '1px solid var(--header-border)', borderRadius: '4px', width: '38px', height: '38px', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

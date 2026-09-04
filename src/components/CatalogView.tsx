@@ -51,12 +51,12 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
     if (!meta) return null;
     const label = lang === 'pt' ? meta.pt : meta.en;
 
-    let bg = '#EFE6D5';
-    let color = '#403C34';
-    if (meta.sev === 'success') { bg = '#E8F0E9'; color = '#3C6549'; }
-    if (meta.sev === 'info') { bg = '#F7E9DF'; color = '#9C4B23'; }
-    if (meta.sev === 'warning') { bg = '#FAF0DA'; color = '#A9761F'; }
-    if (meta.sev === 'danger') { bg = '#FBE8E6'; color = '#8F1B12'; }
+    let bg = 'var(--surface-100)';
+    let color = 'var(--text-color-secondary)';
+    if (meta.sev === 'success') { bg = 'var(--success-soft)'; color = 'var(--success-600)'; }
+    if (meta.sev === 'info') { bg = 'var(--info-soft)'; color = 'var(--info-600)'; }
+    if (meta.sev === 'warning') { bg = 'var(--warning-soft)'; color = 'var(--warning-600)'; }
+    if (meta.sev === 'danger') { bg = 'var(--danger-soft)'; color = 'var(--danger-600)'; }
 
     return (
       <span style={{ background: bg, color: color, fontSize: '11px', fontFamily: 'var(--font-sans)', padding: '2px 8px', borderRadius: '4px', fontWeight: 500, whiteSpace: 'nowrap' }}>
@@ -72,9 +72,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
     fontSize: '11.5px',
     fontWeight: 500,
     cursor: 'pointer',
-    border: `1px solid ${active ? '#243A2E' : 'var(--input-border)'}`,
-    background: active ? '#243A2E' : 'transparent',
-    color: active ? '#F3EBDD' : 'var(--text-color-secondary)'
+    border: `1px solid ${active ? 'var(--primary-color)' : 'var(--input-border)'}`,
+    background: active ? 'var(--primary-color)' : 'transparent',
+    color: active ? 'var(--primary-color-text)' : 'var(--text-color-secondary)'
   });
 
   return (
@@ -105,7 +105,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                 color: 'var(--text-color)'
               }}
             />
-            <Search size={16} color="#7C7362" style={{ position: 'absolute', left: '10px', top: '10px' }} />
+            <Search size={16} color="var(--secondary-color)" style={{ position: 'absolute', left: '10px', top: '10px' }} />
           </div>
 
           <div>
@@ -159,7 +159,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
 
           <button
             onClick={clearAllFilters}
-            style={{ background: 'none', border: 'none', padding: 0, color: '#9C4B23', fontFamily: 'var(--font-sans)', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
+            style={{ background: 'none', border: 'none', padding: 0, color: 'var(--info-600)', fontFamily: 'var(--font-sans)', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
           >
             {t.clearFilters}
           </button>
@@ -176,8 +176,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                 <button
                   onClick={() => setViewMode('cards')}
                   style={{
-                    background: viewMode === 'cards' ? '#243A2E' : 'transparent',
-                    color: viewMode === 'cards' ? '#F3EBDD' : 'var(--text-color-secondary)',
+                    background: viewMode === 'cards' ? 'var(--primary-color)' : 'transparent',
+                    color: viewMode === 'cards' ? 'var(--primary-color-text)' : 'var(--text-color-secondary)',
                     border: 'none',
                     padding: '6px 12px',
                     fontSize: '12px',
@@ -190,8 +190,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                 <button
                   onClick={() => setViewMode('table')}
                   style={{
-                    background: viewMode === 'table' ? '#243A2E' : 'transparent',
-                    color: viewMode === 'table' ? '#F3EBDD' : 'var(--text-color-secondary)',
+                    background: viewMode === 'table' ? 'var(--primary-color)' : 'transparent',
+                    color: viewMode === 'table' ? 'var(--primary-color-text)' : 'var(--text-color-secondary)',
                     border: 'none',
                     padding: '6px 12px',
                     fontSize: '12px',
@@ -213,7 +213,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
             <div style={{ border: '1px solid var(--surface-border)', borderRadius: '6px', overflowX: 'auto', background: 'var(--surface-card)' }}>
               <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
                 <thead>
-                  <tr style={{ background: '#243A2E', color: '#F3EBDD' }}>
+                  <tr style={{ background: 'var(--brand-panel-background)', color: 'var(--brand-panel-text)' }}>
                     <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Família' : 'Family'}</th>
                     <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Relatório' : 'Report'}</th>
                     <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Categoria' : 'Category'}</th>
@@ -228,10 +228,10 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                     <tr key={f.key} style={{ borderTop: '1px solid var(--surface-border)' }}>
                       <td style={{ padding: '12px', verticalAlign: 'top' }}>
                         <div style={{ fontSize: '13.5px', fontWeight: 600 }}>{f.disp}</div>
-                        <div style={{ fontSize: '11.5px', color: '#4A7C59', marginTop: '3px' }}>{f.alias}</div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--success-color)', marginTop: '3px' }}>{f.alias}</div>
                       </td>
                       <td style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 500 }}>{f.report}</td>
-                      <td style={{ padding: '12px', verticalAlign: 'top', fontSize: '12.5px', color: '#B85C2E' }}>{f.cat}</td>
+                      <td style={{ padding: '12px', verticalAlign: 'top', fontSize: '12.5px', color: 'var(--info-color)' }}>{f.cat}</td>
                       <td style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{f.plats.join(', ')}</td>
                       <td style={{ padding: '12px', verticalAlign: 'top' }}>{renderBadge('ed', f.ed)}</td>
                       <td
@@ -245,7 +245,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                       <td style={{ padding: '12px', verticalAlign: 'top', textAlign: 'right' }}>
                         <button
                           onClick={() => onOpenFamily(f.key)}
-                          style={{ background: '#243A2E', color: '#F3EBDD', border: 'none', borderRadius: '4px', padding: '8px 14px', fontSize: '12.5px', fontWeight: 500, cursor: 'pointer' }}
+                          style={{ background: 'var(--primary-color)', color: 'var(--primary-color-text)', border: 'none', borderRadius: '4px', padding: '8px 14px', fontSize: '12.5px', fontWeight: 500, cursor: 'pointer' }}
                         >
                           {t.viewStudy}
                         </button>
@@ -266,7 +266,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                         {lang === 'pt' ? f.headline.pt : f.headline.en}
                       </div>
                     </div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '.1em', color: '#B85C2E', textAlign: 'right' }}>{f.cat}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '.1em', color: 'var(--info-color)', textAlign: 'right' }}>{f.cat}</span>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', borderTop: '1px solid var(--surface-border)', paddingTop: '9px' }}>

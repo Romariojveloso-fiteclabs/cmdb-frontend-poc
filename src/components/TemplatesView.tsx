@@ -32,7 +32,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
         {t.tplSub}
       </p>
 
-      <div style={{ background: '#F7E9DF', border: '1px solid #B85C2E', color: '#9C4B23', borderRadius: '6px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+      <div style={{ background: 'var(--info-soft)', border: '1px solid var(--info-color)', color: 'var(--info-600)', borderRadius: '6px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
         <Info size={20} style={{ flexShrink: 0 }} />
         <span style={{ fontSize: '13.5px', lineHeight: 1.5 }}>
           {t.tplNote}
@@ -43,7 +43,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
         {templates.map((tp) => (
           <article key={tp.id} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', letterSpacing: '.12em', color: '#B85C2E' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', letterSpacing: '.12em', color: 'var(--info-color)' }}>
                 {tp.id}
               </span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', color: 'var(--text-color-secondary)' }}>
@@ -62,7 +62,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '5px' }}>
               {tp.fields.map((fd, i) => (
                 <li key={i} style={{ fontSize: '12.5px', color: 'var(--text-color-secondary)', display: 'flex', gap: '8px' }}>
-                  <span style={{ color: '#4A7C59' }}>·</span>
+                  <span style={{ color: 'var(--success-color)' }}>·</span>
                   <span>{fd}</span>
                 </li>
               ))}
@@ -75,8 +75,8 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
               <button
                 onClick={() => downloadTemplate(tp)}
                 style={{
-                  background: '#243A2E',
-                  color: '#F3EBDD',
+                  background: 'var(--primary-color)',
+                  color: 'var(--primary-color-text)',
                   border: 'none',
                   borderRadius: '4px',
                   padding: '9px 14px',

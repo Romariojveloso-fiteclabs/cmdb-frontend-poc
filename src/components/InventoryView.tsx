@@ -88,9 +88,9 @@ const copy = {
 };
 
 const statusStyle: Record<'success' | 'warning' | 'secondary', React.CSSProperties> = {
-  success: { background: '#E8F0E9', color: '#3C6549', borderColor: '#B4C8B9' },
-  warning: { background: '#FAF0DA', color: '#8A651C', borderColor: '#E7C977' },
-  secondary: { background: '#EFE6D5', color: '#5C564A', borderColor: '#CFC0A6' }
+  success: { background: 'var(--success-soft)', color: 'var(--success-600)', borderColor: 'var(--primary-200)' },
+  warning: { background: 'var(--warning-soft)', color: 'var(--warning-600)', borderColor: 'var(--warning-color)' },
+  secondary: { background: 'var(--surface-100)', color: 'var(--secondary-600)', borderColor: 'var(--input-border)' }
 };
 
 function StatusBadge({ label, tone }: { label: string; tone: keyof typeof statusStyle }) {
@@ -162,9 +162,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
     fontSize: '11.5px',
     fontWeight: 500,
     cursor: 'pointer',
-    border: `1px solid ${active ? '#243A2E' : 'var(--input-border)'}`,
-    background: active ? '#243A2E' : 'transparent',
-    color: active ? '#F3EBDD' : 'var(--text-color-secondary)'
+    border: `1px solid ${active ? 'var(--primary-color)' : 'var(--input-border)'}`,
+    background: active ? 'var(--primary-color)' : 'transparent',
+    color: active ? 'var(--primary-color-text)' : 'var(--text-color-secondary)'
   });
 
   const renderPagination = (position: 'top' | 'bottom') => totalPages > 1 && (
@@ -217,7 +217,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
                 color: 'var(--text-color)'
               }}
             />
-            <Search size={16} color="#7C7362" style={{ position: 'absolute', left: '10px', top: '10px' }} />
+            <Search size={16} color="var(--secondary-color)" style={{ position: 'absolute', left: '10px', top: '10px' }} />
           </div>
 
           <div>
@@ -267,7 +267,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
 
           <button
             onClick={clearAllFilters}
-            style={{ background: 'none', border: 'none', padding: 0, color: '#9C4B23', fontFamily: 'var(--font-sans)', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
+            style={{ background: 'none', border: 'none', padding: 0, color: 'var(--info-600)', fontFamily: 'var(--font-sans)', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
           >
             {t.clearFilters}
           </button>
@@ -318,7 +318,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
             <col style={{ width: '13%' }} />
           </colgroup>
           <thead>
-            <tr style={{ background: '#243A2E', color: '#F3EBDD' }}>
+            <tr style={{ background: 'var(--brand-panel-background)', color: 'var(--brand-panel-text)' }}>
               {[t.family, t.noMoreRansom, t.malwareBazaar, t.samples, t.zoo, t.cmdb].map((heading) => (
                 <th key={heading} scope="col" style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{heading}</th>
               ))}
@@ -377,7 +377,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
                     <button
                       type="button"
                       onClick={() => onOpenFamily(record.documentedFamilyKey!)}
-                      style={{ background: '#243A2E', color: '#F3EBDD', border: 'none', borderRadius: '4px', padding: '5px 9px', fontSize: '11.5px', fontWeight: 500, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                      style={{ background: 'var(--primary-color)', color: 'var(--primary-color-text)', border: 'none', borderRadius: '4px', padding: '5px 9px', fontSize: '11.5px', fontWeight: 500, cursor: 'pointer', whiteSpace: 'nowrap' }}
                     >
                       {t.source}
                     </button>

@@ -71,12 +71,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
     if (!meta) return null;
     const label = lang === 'pt' ? meta.pt : meta.en;
     
-    let bg = '#EFE6D5';
-    let color = '#403C34';
-    if (meta.sev === 'success') { bg = '#E8F0E9'; color = '#3C6549'; }
-    if (meta.sev === 'info') { bg = '#F7E9DF'; color = '#9C4B23'; }
-    if (meta.sev === 'warning') { bg = '#FAF0DA'; color = '#A9761F'; }
-    if (meta.sev === 'danger') { bg = '#FBE8E6'; color = '#8F1B12'; }
+    let bg = 'var(--surface-100)';
+    let color = 'var(--text-color-secondary)';
+    if (meta.sev === 'success') { bg = 'var(--success-soft)'; color = 'var(--success-600)'; }
+    if (meta.sev === 'info') { bg = 'var(--info-soft)'; color = 'var(--info-600)'; }
+    if (meta.sev === 'warning') { bg = 'var(--warning-soft)'; color = 'var(--warning-600)'; }
+    if (meta.sev === 'danger') { bg = 'var(--danger-soft)'; color = 'var(--danger-600)'; }
 
     return (
       <span style={{ background: bg, color: color, fontSize: '11px', fontFamily: 'var(--font-sans)', padding: '2px 8px', borderRadius: '4px', fontWeight: 500 }}>
@@ -87,11 +87,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
 
   return (
     <div>
-      <section className="home-hero" style={{ background: '#243A2E', color: '#F3EBDD', padding: '72px 28px 64px' }}>
+      <section className="home-hero" style={{ background: 'var(--brand-panel-background)', color: 'var(--brand-panel-text)', padding: '72px 28px 64px' }}>
         <div className="home-hero-grid" style={{ maxWidth: '1180px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 1fr)', gap: '64px', alignItems: 'stretch' }}>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
             <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.18em', color: '#D39A32', marginBottom: '18px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.18em', color: 'var(--warning-color)', marginBottom: '18px' }}>
                 {t.eyebrow}
               </div>
               <h1 className="home-hero-title" style={{ fontFamily: 'var(--font-accent)', fontSize: '42px', lineHeight: 1.24, fontWeight: 600, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -108,9 +108,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
               <button
                 onClick={() => onNavigate('catalog')}
                 style={{
-                  background: '#B85C2E',
-                  color: '#FDFAF4',
-                  border: '1px solid #B85C2E',
+                  background: 'var(--info-color)',
+                  color: 'var(--surface-card)',
+                  border: '1px solid var(--info-color)',
                   borderRadius: '5px',
                   padding: '10px 20px',
                   fontSize: '14px',
@@ -129,7 +129,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                 onClick={() => onNavigate('security')}
                 style={{
                   background: 'transparent',
-                  color: '#F3EBDD',
+                  color: 'var(--brand-panel-text)',
                   border: '1px solid #537760',
                   borderRadius: '5px',
                   padding: '10px 20px',
@@ -148,12 +148,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E0D4BE', borderRadius: '6px', padding: '16px 28px', background: '#F3EBDD' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '16px 28px', background: 'var(--brand-panel-text)' }}>
               <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '100%', maxWidth: '300px', height: '196px', objectFit: 'contain', display: 'block' }} />
             </div>
 
             <div style={{ background: 'rgba(243,235,221,.06)', border: '1px solid #537760', borderRadius: '6px', padding: '24px' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.16em', color: '#D39A32', marginBottom: '14px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.16em', color: 'var(--warning-color)', marginBottom: '14px' }}>
                 {t.searchLabel}
               </div>
               <form className="home-search-form" onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px' }}>
@@ -166,9 +166,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                     width: '100%',
                     padding: '10px 14px',
                     borderRadius: '4px',
-                    border: '1px solid #CFC0A6',
-                    background: '#FDFAF4',
-                    color: '#202522',
+                    border: '1px solid var(--input-border)',
+                    background: 'var(--surface-card)',
+                    color: 'var(--text-color)',
                     fontFamily: 'var(--font-sans)',
                     fontSize: '13.5px'
                   }}
@@ -176,8 +176,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                 <button
                   type="submit"
                   style={{
-                    background: '#243A2E',
-                    color: '#F3EBDD',
+                    background: 'var(--primary-color)',
+                    color: 'var(--primary-color-text)',
                     border: '1px solid #537760',
                     borderRadius: '4px',
                     padding: '0 16px',
@@ -219,7 +219,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
       </section>
 
       <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '28px' }}>
-        <div style={{ background: '#FAF0DA', border: '1px solid #D39A32', color: '#A9761F', borderRadius: '6px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ background: 'var(--warning-soft)', border: '1px solid var(--warning-color)', color: 'var(--warning-600)', borderRadius: '6px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
           <AlertTriangle size={20} style={{ flexShrink: 0 }} />
           <span style={{ fontSize: '13.5px', lineHeight: 1.5 }}>
             {t.safetyBanner}
@@ -231,7 +231,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
         <div className="home-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '1px', background: 'var(--surface-border)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
           {stats.map((s, idx) => (
             <div key={idx} style={{ background: 'var(--surface-card)', padding: '22px 24px' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '34px', fontWeight: 500, color: '#243A2E', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '34px', fontWeight: 500, color: 'var(--primary-color)', lineHeight: 1 }}>
                 {s.n}
               </div>
               <div style={{ fontSize: '13px', color: 'var(--text-color-secondary)', marginTop: '8px' }}>
@@ -247,7 +247,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
           <h2 style={{ fontFamily: 'var(--font-accent)', fontSize: '26px', fontWeight: 600, margin: 0 }}>
             {t.recentTitle}
           </h2>
-          <button onClick={() => onNavigate('catalog')} style={{ background: 'none', border: 'none', color: '#9C4B23', fontFamily: 'var(--font-sans)', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={() => onNavigate('catalog')} style={{ background: 'none', border: 'none', color: 'var(--info-600)', fontFamily: 'var(--font-sans)', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
             {t.seeAll}
           </button>
         </div>
@@ -257,14 +257,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
             <article key={f.key} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '19px', fontWeight: 600, letterSpacing: '.06em', color: '#202522' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '19px', fontWeight: 600, letterSpacing: '.06em', color: 'var(--text-color)' }}>
                     {f.name}
                   </div>
                   <div style={{ fontSize: '13px', color: 'var(--text-color-secondary)', marginTop: '6px' }}>
                     {lang === 'pt' ? f.headline.pt : f.headline.en}
                   </div>
                 </div>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.12em', color: '#B85C2E', whiteSpace: 'nowrap' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.12em', color: 'var(--info-color)', whiteSpace: 'nowrap' }}>
                   {f.cat}
                 </span>
               </div>
@@ -300,7 +300,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                     padding: '6px 12px',
                     fontSize: '12.5px',
                     fontWeight: 500,
-                    color: '#202522',
+                    color: 'var(--text-color)',
                     cursor: 'pointer'
                   }}
                 >
@@ -323,8 +323,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
 
           <ol className="home-steps-grid" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
             {steps.map((st, idx) => (
-              <li key={idx} style={{ borderTop: '2px solid #D39A32', paddingTop: '14px' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#B85C2E', marginBottom: '8px' }}>
+              <li key={idx} style={{ borderTop: '2px solid var(--warning-color)', paddingTop: '14px' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--info-color)', marginBottom: '8px' }}>
                   {st.n}
                 </div>
                 <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.35, marginBottom: '6px' }}>
@@ -350,8 +350,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
           <button
             onClick={() => onNavigate('contribute')}
             style={{
-              background: '#243A2E',
-              color: '#F3EBDD',
+              background: 'var(--primary-color)',
+              color: 'var(--primary-color-text)',
               border: 'none',
               borderRadius: '4px',
               padding: '10px 18px',
@@ -379,7 +379,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
             onClick={() => onNavigate('guides')}
             style={{
               background: 'transparent',
-              color: '#202522',
+              color: 'var(--text-color)',
               border: '1px solid var(--input-border)',
               borderRadius: '4px',
               padding: '10px 18px',

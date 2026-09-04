@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { HomeView } from './HomeView';
@@ -14,11 +14,46 @@ import { PwaInstallPrompt } from './PwaInstallPrompt';
 import { Lang } from '../data/families';
 
 export const AppContainer: React.FC = () => {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    const savedTheme = window.localStorage.getItem('cmdb-theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
   const [screen, setScreen] = useState<string>('home');
   const [lang, setLang] = useState<Lang>('pt');
   const [selectedFamily, setSelectedFamily] = useState<string>('akira');
   const [selectedReport, setSelectedReport] = useState<string>('CMDB-TR-006');
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute(
+      'content',
+      theme === 'dark' ? '#14211A' : '#243A2E'
+    );
+  }, [theme]);
+
+  useEffect(() => {
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const followSystemTheme = (event: MediaQueryListEvent) => {
+      if (!window.localStorage.getItem('cmdb-theme')) {
+        setTheme(event.matches ? 'dark' : 'light');
+      }
+    };
+
+    systemTheme.addEventListener('change', followSystemTheme);
+    return () => systemTheme.removeEventListener('change', followSystemTheme);
+  }, []);
+
+  const handleToggleTheme = () => {
+    setTheme((current) => {
+      const nextTheme = current === 'dark' ? 'light' : 'dark';
+      window.localStorage.setItem('cmdb-theme', nextTheme);
+      return nextTheme;
+    });
+  };
 
   const handleNavigate = (targetScreen: string) => {
     setScreen(targetScreen);
@@ -49,6 +84,8 @@ export const AppContainer: React.FC = () => {
         lang={lang}
         onNavigate={handleNavigate}
         onSetLang={setLang}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
       <PwaInstallPrompt lang={lang} />
 
