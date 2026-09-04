@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FileEdit, AlertOctagon } from 'lucide-react';
 import { FAMILIES, DIMENSIONS, Lang } from '../data/families';
-import { parseAllFamiliesFromMarkdown, ParsedFamilyData } from '../data/markdownLoader';
+import { parseAllFamiliesFromMarkdown, parseAllReportsFromMarkdown, ParsedFamilyData } from '../data/markdownLoader';
 import { TRANSLATIONS } from '../data/i18n';
 
 interface FamilyDetailViewProps {
@@ -25,6 +25,7 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
   const parsedFamilies = parseAllFamiliesFromMarkdown();
   const parsedData: ParsedFamilyData | undefined = parsedFamilies.find(f => f.key === familyKey) || parsedFamilies[0];
   const fam = FAMILIES.find((f) => f.key === familyKey) || FAMILIES[0];
+  const familyReports = parseAllReportsFromMarkdown().filter((report) => report.familyKey === fam.key);
 
   const isAkira = fam.key === 'akira';
   const otherFams = FAMILIES.filter((f) => f.key !== fam.key);
@@ -307,33 +308,39 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '10px' }}>
               {t.reportCard}
             </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '15px', fontWeight: 600, marginBottom: '4px' }}>
-              {fam.report}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {familyReports.map((report) => (
+                <div key={report.id} style={{ paddingTop: '12px', borderTop: '1px solid var(--surface-border)' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, marginBottom: '5px' }}>
+                    {report.id}
+                  </div>
+                  <div style={{ fontSize: '11.5px', lineHeight: 1.4, color: 'var(--text-color-secondary)', marginBottom: '10px' }}>
+                    {report.title[lang]}
+                  </div>
+                  <button
+                    onClick={() => onOpenReport(report.id, fam.key)}
+                    style={{
+                      width: '100%',
+                      background: 'var(--primary-color)',
+                      color: 'var(--primary-color-text)',
+                      border: 'none',
+                      borderRadius: '4px',
+                      padding: '9px 12px',
+                      fontSize: '12.5px',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <FileEdit size={15} />
+                    {t.readReport}
+                  </button>
+                </div>
+              ))}
             </div>
-            <div style={{ fontSize: '12.5px', color: 'var(--text-color-secondary)', marginBottom: '16px' }}>
-              {lang === 'pt' ? 'Versão 1.2 · ' : 'Version 1.2 · '}{fam.updated} · PT · EN
-            </div>
-            <button
-              onClick={() => onOpenReport(fam.report, fam.key)}
-              style={{
-                width: '100%',
-                background: 'var(--primary-color)',
-                color: 'var(--primary-color-text)',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '10px 14px',
-                fontSize: '13px',
-                fontWeight: 500,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-            >
-              <FileEdit size={16} />
-              {t.readReport}
-            </button>
           </div>
 
           <div style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px' }}>

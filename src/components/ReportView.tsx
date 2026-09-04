@@ -1,5 +1,5 @@
 import React from 'react';
-import { parseAllFamiliesFromMarkdown, ParsedFamilyData } from '../data/markdownLoader';
+import { parseAllReportsFromMarkdown } from '../data/markdownLoader';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
 
@@ -13,12 +13,12 @@ interface ReportViewProps {
 export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lang, onNavigate }) => {
   const t = TRANSLATIONS[lang];
 
-  const families = parseAllFamiliesFromMarkdown();
-  const familyData: ParsedFamilyData | undefined = families.find(
-    (f) => f.key === familyKey || f.report === reportId
-  ) || families[0];
+  const reports = parseAllReportsFromMarkdown();
+  const reportData = reports.find(
+    (report) => report.familyKey === familyKey && report.id === reportId,
+  );
 
-  if (!familyData) {
+  if (!reportData) {
     return (
       <section style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 28px', textAlign: 'center' }}>
         <h2 style={{ fontFamily: 'var(--font-accent)', fontSize: '24px' }}>
@@ -34,11 +34,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lan
     );
   }
 
-  const html = familyData.htmlContent[lang] || familyData.htmlContent.pt;
-  const tocList = familyData.toc[lang] || familyData.toc.pt;
+  const html = reportData.htmlContent[lang] || reportData.htmlContent.pt;
+  const tocList = reportData.toc[lang] || reportData.toc.pt;
 
   const metaList = [
-    { label: 'RELATÓRIO', value: familyData.report },
+    { label: 'RELATÓRIO', value: reportData.id },
     { label: 'IDIOMA', value: lang.toUpperCase() },
     { label: 'FONTE', value: 'Repositório de Pesquisa caatinga-malware-db' },
     { label: 'CLASSIFICAÇÃO', value: 'Pesquisa Acadêmica Defensiva' }
@@ -66,7 +66,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lan
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
           <span style={{ display: 'block', width: '3px', height: '14px', background: 'var(--ufpe-crimson)' }}></span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: 'var(--info-color)' }}>
-            {familyData.report}
+            {reportData.id}
           </span>
         </div>
 

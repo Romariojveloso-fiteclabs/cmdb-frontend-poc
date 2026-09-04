@@ -51,6 +51,14 @@ export interface ParsedFamilyData {
   toc: Record<Lang, { id: string; n: string; label: string }[]>;
 }
 
+export interface ParsedReportDocument {
+  id: string;
+  familyKey: string;
+  title: Record<Lang, string>;
+  htmlContent: Record<Lang, string>;
+  toc: Record<Lang, { id: string; n: string; label: string }[]>;
+}
+
 const reportFiles = import.meta.glob("/src/content/docs/reports/**/*.md", {
   query: "?raw",
   import: "default",
@@ -306,6 +314,81 @@ function splitBiLangMarkdown(rawContent: string): { pt: string; en: string } {
   return { pt: rawContent, en: rawContent };
 }
 
+function markdownTitle(rawText: string, fallback: string): string {
+  const firstHeading = rawText.split("\n").find((line) => line.startsWith("# "));
+  return firstHeading?.replace(/^#\s+/, "").trim() || fallback;
+}
+
+function reportIdFromDocument(path: string, rawText: string): string {
+  const declaredId = rawText.match(/^id:\s*(CMDB-[A-Z0-9-]+)/im)?.[1];
+  const numberedId = rawText.match(/\bCMDB-(?:TR|PR)-\d{3}\b/i)?.[0]
+    || path.match(/\bCMDB-(?:TR|PR)-\d{3}\b/i)?.[0];
+  if (declaredId || numberedId) return (declaredId || numberedId)!.toUpperCase();
+
+  const fileName = path.split("/").pop()?.replace(/\.md$/i, "") || "report";
+  return fileName
+    .replace(/-(?:pt-br|en)$/i, "")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-|-$/g, "")
+    .toUpperCase();
+}
+
+export function parseAllReportsFromMarkdown(): ParsedReportDocument[] {
+  const reportMap = new Map<string, ParsedReportDocument>();
+
+  for (const path in reportFiles) {
+    const rawText = reportFiles[path];
+    const pathParts = path.split("/");
+    const familyKey = pathParts[pathParts.length - 2].toLowerCase();
+    const lowerPath = path.toLowerCase();
+    const reportId = reportIdFromDocument(path, rawText);
+    const mapKey = `${familyKey}:${reportId}`;
+    const existing = reportMap.get(mapKey) || {
+      id: reportId,
+      familyKey,
+      title: { pt: reportId, en: reportId },
+      htmlContent: { pt: "", en: "" },
+      toc: { pt: [], en: [] },
+    };
+
+    const isPt = lowerPath.includes("pt-br") || lowerPath.includes("-pt.");
+    const isEn = lowerPath.includes("-en.") || lowerPath.endsWith("en.md");
+    const bilingual = !isPt && !isEn ? splitBiLangMarkdown(rawText) : null;
+
+    const setLanguageContent = (language: Lang, content: string) => {
+      const resolvedContent = resolveImageUrls(content, familyKey);
+      existing.title[language] = markdownTitle(content, reportId);
+      existing.htmlContent[language] = renderMarkdown(resolvedContent);
+      existing.toc[language] = extractToc(content);
+    };
+
+    if (isPt) setLanguageContent("pt", rawText);
+    else if (isEn) setLanguageContent("en", rawText);
+    else if (bilingual) {
+      setLanguageContent("pt", bilingual.pt);
+      setLanguageContent("en", bilingual.en);
+    }
+
+    reportMap.set(mapKey, existing);
+  }
+
+  return Array.from(reportMap.values()).map((report) => ({
+    ...report,
+    title: {
+      pt: report.title.pt === report.id ? report.title.en : report.title.pt,
+      en: report.title.en === report.id ? report.title.pt : report.title.en,
+    },
+    htmlContent: {
+      pt: report.htmlContent.pt || report.htmlContent.en,
+      en: report.htmlContent.en || report.htmlContent.pt,
+    },
+    toc: {
+      pt: report.toc.pt.length ? report.toc.pt : report.toc.en,
+      en: report.toc.en.length ? report.toc.en : report.toc.pt,
+    },
+  }));
+}
+
 export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
   const familyMap: Record<
     string,
@@ -340,6 +423,7 @@ export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
   }
 
   const families: ParsedFamilyData[] = [];
+  const parsedReports = parseAllReportsFromMarkdown();
 
   for (const key in familyMap) {
     const item = familyMap[key];
@@ -356,12 +440,11 @@ export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
     const name = rawName.toUpperCase();
     const disp = rawName;
 
-    const reportIdMatch =
-      ptRaw.match(/CMDB-(?:TR|PR|AntiPetya)-\d{3}/i) ||
-      ptRaw.match(/CMDB-[A-Z0-9-]+/i);
-    const reportId = reportIdMatch
-      ? reportIdMatch[0].toUpperCase()
-      : `CMDB-TR-${key.toUpperCase()}`;
+    const familyReports = parsedReports.filter((report) => report.familyKey === key);
+    const primaryReport = familyReports.find((report) => /^CMDB-(?:TR|PR)-\d{3}$/.test(report.id))
+      || familyReports.find((report) => report.id.endsWith("-REPORT"))
+      || familyReports[0];
+    const reportId = primaryReport?.id || `CMDB-TR-${key.toUpperCase()}`;
 
     let edStatus: "legacy" | "draft" | "review" | "published" = "published";
     if (
@@ -502,7 +585,14 @@ export function parseAllGuidesFromMarkdown() {
 
     const guideIdMatch =
       rawText.match(/CMDB-GD-\d{3}/i) || path.match(/CMDB-GD-\d{3}/i);
-    const id = guideIdMatch ? guideIdMatch[0].toUpperCase() : "CMDB-GD-001";
+    const guideFileName = path.split("/").pop()?.replace(/\.md$/i, "") || "guide";
+    const id = guideIdMatch
+      ? guideIdMatch[0].toUpperCase()
+      : guideFileName
+          .replace(/-(?:pt-br|en)$/i, "")
+          .replace(/[^a-z0-9]+/gi, "-")
+          .replace(/^-|-$/g, "")
+          .toUpperCase();
 
     const htmlContent = renderMarkdown(rawText);
 
