@@ -161,7 +161,11 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                 <h2 style={{ fontFamily: 'var(--font-accent)', fontSize: '22px', fontWeight: 600, margin: '0 0 10px' }}>
                   {t.summaryTitle}
                 </h2>
-                <p style={{ fontSize: '15.5px', lineHeight: 1.7, margin: 0, maxWidth: '72ch' }}>
+                <p
+                  className="family-summary-text"
+                  lang={lang === 'pt' ? 'pt-BR' : 'en'}
+                  style={{ fontSize: '15.5px', lineHeight: 1.7, margin: 0, maxWidth: '72ch' }}
+                >
                   {parsedData ? (parsedData.summary[lang] || parsedData.summary.pt) : fam.headline.pt}
                 </p>
               </div>

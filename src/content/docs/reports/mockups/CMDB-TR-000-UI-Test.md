@@ -40,20 +40,20 @@ tags:
 
 ## Visão geral
 
-| Campo | Valor |
-|---|---|
-| Família | Mandacaru Locker |
-| Alias | MDCR Test |
-| Categoria | Ransomware fictício |
-| Plataforma | Windows x86-64 |
-| Situação editorial | Conteúdo de demonstração |
-| Identificação | Sintética e não atribuível |
-| Evidência | Simulação para UX |
-| Recuperação | Funcional aparente — fictícia |
-| Versão | `0.0.0` |
-| Última atualização | 2 de setembro de 2026 |
+| Campo              | Valor                         |
+| ------------------ | ----------------------------- |
+| Família            | Mandacaru Locker              |
+| Alias              | MDCR Test                     |
+| Categoria          | Ransomware fictício           |
+| Plataforma         | Windows x86-64                |
+| Situação editorial | Conteúdo de demonstração      |
+| Identificação      | Sintética e não atribuível    |
+| Evidência          | Simulação para UX             |
+| Recuperação        | Funcional aparente — fictícia |
+| Versão             | `0.0.0`                       |
+| Última atualização | 2 de setembro de 2026         |
 
-## Resumo executivo
+## Resumo
 
 Este relatório simula a documentação de uma análise dinâmica realizada em laboratório isolado. No cenário fictício, arquivos de referência receberam a extensão `.mandacaru`, uma nota de resgate foi exibida e uma ferramenta defensiva reconheceu parte do conjunto afetado. A interface informou a recuperação de 18 de 20 arquivos, mas não foram produzidos hashes posteriores suficientes para comprovar igualdade byte a byte. O resultado deve, portanto, ser apresentado como **recuperação funcional aparente**, nunca como recuperação integral validada.
 
@@ -73,33 +73,33 @@ O texto foi deliberadamente construído para testar títulos extensos, alertas, 
 
 > Os valores abaixo possuem formato semelhante ao SHA-256 apenas para testar tipografia monoespaçada, quebra de linha, cópia e busca. Eles não identificam amostras do projeto.
 
-| Artefato | SHA-256 sintético | Origem | Verificação |
-|---|---|---|---|
-| Pacote de demonstração | `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` | Gerador de dados para UX | Sintética |
-| Executável fictício | `bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb` | Cenário de prototipação | Não executado |
-| Ferramenta defensiva fictícia | `cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc` | Cenário de prototipação | Não distribuída |
+| Artefato                      | SHA-256 sintético                                                  | Origem                   | Verificação     |
+| ----------------------------- | ------------------------------------------------------------------ | ------------------------ | --------------- |
+| Pacote de demonstração        | `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` | Gerador de dados para UX | Sintética       |
+| Executável fictício           | `bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb` | Cenário de prototipação  | Não executado   |
+| Ferramenta defensiva fictícia | `cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc` | Cenário de prototipação  | Não distribuída |
 
 ## Ambiente de laboratório simulado
 
-| Componente | Configuração fictícia |
-|---|---|
-| Hipervisor | Ambiente de demonstração |
-| Sistema convidado | Windows de teste |
-| Rede | Desconectada |
-| Dados utilizados | Arquivos sintéticos sem informação pessoal |
-| Restauração | Snapshot descartável |
-| Instrumentação | Eventos, processos e alterações de arquivos simulados |
+| Componente        | Configuração fictícia                                 |
+| ----------------- | ----------------------------------------------------- |
+| Hipervisor        | Ambiente de demonstração                              |
+| Sistema convidado | Windows de teste                                      |
+| Rede              | Desconectada                                          |
+| Dados utilizados  | Arquivos sintéticos sem informação pessoal            |
+| Restauração       | Snapshot descartável                                  |
+| Instrumentação    | Eventos, processos e alterações de arquivos simulados |
 
 ## Linha do tempo
 
-| Horário | Evento simulado | Situação |
-|---|---|---|
-| 10:00 | Ambiente restaurado e validado | Concluído |
-| 10:08 | Dados sintéticos disponibilizados | Concluído |
-| 10:15 | Alterações fictícias registradas | Evidência disponível |
-| 10:22 | Resposta defensiva iniciada | Concluído |
-| 10:31 | Recuperação encerrada | Parcial |
-| 10:40 | Ambiente descartado | Concluído |
+| Horário | Evento simulado                   | Situação             |
+| ------- | --------------------------------- | -------------------- |
+| 10:00   | Ambiente restaurado e validado    | Concluído            |
+| 10:08   | Dados sintéticos disponibilizados | Concluído            |
+| 10:15   | Alterações fictícias registradas  | Evidência disponível |
+| 10:22   | Resposta defensiva iniciada       | Concluído            |
+| 10:31   | Recuperação encerrada             | Parcial              |
+| 10:40   | Ambiente descartado               | Concluído            |
 
 ## Evidências de demonstração
 
@@ -126,13 +126,13 @@ O texto foi deliberadamente construído para testar títulos extensos, alertas, 
 
 ## Comportamentos apresentados pela simulação
 
-| Comportamento | Observação | Confiança |
-|---|---|---|
-| Alteração de arquivos | Sufixo fictício aplicado aos dados de referência | Demonstração |
-| Nota de resgate | Documento textual simulado | Demonstração |
-| Persistência | Não avaliada | Sem evidência |
-| Comunicação de rede | Não avaliada | Sem evidência |
-| Recuperação de arquivos | 18 de 20 aparentemente acessíveis | Limitada |
+| Comportamento           | Observação                                       | Confiança     |
+| ----------------------- | ------------------------------------------------ | ------------- |
+| Alteração de arquivos   | Sufixo fictício aplicado aos dados de referência | Demonstração  |
+| Nota de resgate         | Documento textual simulado                       | Demonstração  |
+| Persistência            | Não avaliada                                     | Sem evidência |
+| Comunicação de rede     | Não avaliada                                     | Sem evidência |
+| Recuperação de arquivos | 18 de 20 aparentemente acessíveis                | Limitada      |
 
 ## Avaliação da recuperação
 
@@ -168,14 +168,14 @@ O texto foi deliberadamente construído para testar títulos extensos, alertas, 
 
 ## Controle editorial
 
-| Versão | Data | Responsável | Alteração |
-|---|---|---|---|
+| Versão  | Data        | Responsável            | Alteração                                     |
+| ------- | ----------- | ---------------------- | --------------------------------------------- |
 | `0.0.0` | 2 set. 2026 | Equipe de prototipação | Criação do conteúdo fictício para teste de UX |
 
 ## Referências fictícias
 
-1. CAATINGA MALWARE DB. *Modelo sintético para prototipação de interface*. Referência inexistente, 2026.
-2. LABORATÓRIO FICTÍCIO. *Conjunto de evidências de demonstração*. Material não publicado, 2026.
+1. CAATINGA MALWARE DB. _Modelo sintético para prototipação de interface_. Referência inexistente, 2026.
+2. LABORATÓRIO FICTÍCIO. _Conjunto de evidências de demonstração_. Material não publicado, 2026.
 
 ## Aviso final
 

@@ -52,20 +52,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportId, familyKey, lan
         </div>
         <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {tocList.map((s: { id: string; n: string; label: string }, idx: number) => (
-            <li
-              key={idx}
-              style={{
-                display: 'flex',
-                gap: '10px',
-                padding: '6px 8px',
-                fontSize: '13px',
-                borderTop: '1px solid var(--surface-border)',
-                borderRadius: '4px',
-                color: 'var(--text-color)'
-              }}
-            >
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#B85C2E' }}>{s.n}</span>
-              <span style={{ fontSize: '12px', lineHeight: 1.3 }}>{s.label}</span>
+            <li key={`${s.id}-${idx}`}>
+              <a className="report-toc__link" href={`#${s.id}`}>
+                <span className="report-toc__number">{s.n}</span>
+                <span>{s.label}</span>
+              </a>
             </li>
           ))}
         </ol>

@@ -383,6 +383,53 @@ button {
 html {
   min-width: 320px;
   scroll-padding-top: 88px;
+  scroll-behavior: smooth;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  scroll-margin-top: 96px;
+}
+
+.family-summary-text {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.report-toc__link {
+  display: flex;
+  gap: 10px;
+  padding: 7px 8px;
+  color: var(--text-color);
+  font-size: 12px;
+  line-height: 1.3;
+  text-decoration: none;
+  border-top: 1px solid var(--surface-border);
+  border-radius: 4px;
+}
+
+.report-toc__link:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+  background: var(--surface-hover);
+}
+
+.report-toc__link:focus-visible {
+  outline: 2px solid var(--info-color);
+  outline-offset: 2px;
+}
+
+.report-toc__number {
+  flex: none;
+  color: #B85C2E;
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 
 img,
@@ -818,6 +865,10 @@ svg {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .pwa-install-prompt {
     animation: none;
   }
