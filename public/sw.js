@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'cmdb-pwa';
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
 const SCOPE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '');
 const withScope = (path) => `${SCOPE_PATH}/${path.replace(/^\/+/, '')}`;
@@ -87,11 +87,11 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           if (response.ok) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(withScope('/'), response.clone()));
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
           }
           return response;
         })
-        .catch(() => caches.match(withScope('/')))
+        .catch(async () => (await caches.match(request)) || caches.match(withScope('/')))
     );
     return;
   }
