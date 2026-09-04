@@ -41,6 +41,32 @@ https://romariojveloso-fiteclabs.github.io/cmdb-frontend-poc/
 
 Os caminhos de recursos respeitam o prefixo `/cmdb-frontend-poc`, configurado em `astro.config.mjs`.
 
+## Rotas e descoberta automática
+
+O build gera páginas estáticas compatíveis com acesso direto no GitHub Pages. As principais rotas são:
+
+```text
+/explorar/
+/inventario/
+/familias/<familia>/
+/familias/<familia>/relatorios/<relatorio>/
+/guias/
+/guias/<guia>/
+/modelos/
+/seguranca/
+/contribuir/
+```
+
+Famílias, relatórios e guias não precisam ser cadastrados manualmente no roteador:
+
+- um diretório em `src/content/docs/reports/<familia>/` gera a rota da família;
+- cada relatório Markdown dentro dele gera sua própria rota;
+- cada Markdown em `src/content/docs/guides/` gera uma rota de guia;
+- identificadores `CMDB-TR-000`, `CMDB-PR-000` e `CMDB-GD-000` são usados como slug quando existirem;
+- quando o documento não declara um identificador, o nome do arquivo é convertido em um slug estável.
+
+As novas rotas são criadas automaticamente pelo próximo `npm run build`. Busca, filtros, visualização e paginação também são gravados na URL para permitir o compartilhamento do estado atual das tabelas.
+
 ## Aplicativo mobile (PWA)
 
 O site é responsivo e pode ser instalado como aplicativo em navegadores compatíveis. No Android ou em navegadores Chromium, use a opção **Instalar** exibida na tela. No iPhone e no iPad, o próprio aviso apresenta o caminho para **Adicionar à Tela de Início**.
