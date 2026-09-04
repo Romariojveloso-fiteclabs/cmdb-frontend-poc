@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe, Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Globe2, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
 import { withBase } from '../utils/paths';
@@ -11,103 +11,83 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
   const t = TRANSLATIONS[lang];
+  const isPt = lang === 'pt';
 
-  const footerNav = [
-    { label: lang === 'pt' ? 'Explorar famílias' : 'Explore families', screen: 'catalog' },
-    { label: lang === 'pt' ? 'Inventário comparativo' : 'Comparative inventory', screen: 'inventory' },
-    { label: lang === 'pt' ? 'Modelos de documentação' : 'Documentation templates', screen: 'templates' },
-    { label: lang === 'pt' ? 'Guias de laboratório' : 'Lab guides', screen: 'guides' },
-    { label: lang === 'pt' ? 'Segurança e uso responsável' : 'Safety and responsible use', screen: 'security' }
-  ];
+  const navigate = (screen: string) => () => onNavigate(screen);
 
   return (
-    <footer className="site-footer" style={{ background: '#202522', color: '#A89A82', padding: '44px 28px 28px', borderTop: '3px solid var(--ufpe-crimson)' }}>
-      <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
-        <div className="site-footer__grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.1fr)', gap: '44px' }}>
-          <div>
-            <div className="site-footer__brand" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
-              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: '#F3EBDD', borderRadius: '5px', flex: 'none' }}>
-                <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '34px', height: '34px', objectFit: 'contain', display: 'block' }} />
+    <footer className="site-footer">
+      <div className="site-footer__inner">
+        <div className="site-footer__main">
+          <div className="site-footer__identity">
+            <button
+              type="button"
+              className="site-footer__home"
+              onClick={navigate('home')}
+              aria-label={isPt ? 'Ir para o início' : 'Go to home'}
+            >
+              <img src={withBase('/assets/cmdb-logo.png')} alt="" />
+              <span>
+                <strong>Caatinga Malware DB</strong>
+                <small>UFPE - CTG</small>
               </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '.14em', color: '#F3EBDD' }}>
-                CAATINGA MALWARE DB
-              </span>
-              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: '#F3EBDD', borderRadius: '5px', flex: 'none' }}>
-                <img src={withBase('/assets/ufpe-brasao.png')} alt="Brasão da UFPE" style={{ width: '30px', height: '30px', objectFit: 'contain', display: 'block' }} />
-              </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.1em', color: '#D39A32', border: '1px solid #5C564A', borderRadius: '3px', padding: '3px 7px' }}>
-                UFPE - CTG
-              </span>
-            </div>
-            <div style={{ fontSize: '12.5px', lineHeight: 1.65, maxWidth: '52ch' }}>
-              {t.footerNote}
-            </div>
-            <div style={{ marginTop: '16px', fontFamily: 'var(--font-mono)', fontSize: '11px', lineHeight: 1.7, color: '#A89A82' }}>
-              {t.footerInstitution}
-              <br />
-              Recife, PE · Brasil
-            </div>
+            </button>
+            <p>{t.footerNote}</p>
           </div>
 
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#D39A32', marginBottom: '14px' }}>
-              {t.footerNavTitle}
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-              {footerNav.map((n, i) => (
-                <button
-                  key={i}
-                  onClick={() => onNavigate(n.screen)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    textAlign: 'left',
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '13px',
-                    color: '#A89A82',
-                    cursor: 'pointer'
-                  }}
-                >
-                  → {n.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#D39A32', marginBottom: '14px' }}>
-              {t.footerContactTitle}
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '11px' }}>
-              <a className="site-footer__link" href="https://sites.ufpe.br/seguranca-ofensiva/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
-                <span style={{ display: 'flex', color: '#D39A32' }}><Globe size={15} /></span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>sites.ufpe.br/seguranca-ofensiva</span>
+          <div className="site-footer__contacts">
+            <span className="site-footer__label">{isPt ? 'Canais e contato' : 'Channels and contact'}</span>
+            <div className="site-footer__contact-links">
+              <a href="https://sites.ufpe.br/seguranca-ofensiva/" target="_blank" rel="noopener noreferrer">
+                <Globe2 size={15} aria-hidden="true" />
+                <span>{isPt ? 'Site do grupo' : 'Group website'}</span>
               </a>
-              <a className="site-footer__link" href="https://github.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
-                <span style={{ display: 'flex', color: '#D39A32' }}><Github size={15} /></span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{lang === 'pt' ? 'GitHub — repositório do acervo' : 'GitHub — archive repository'}</span>
+              <a href="https://github.com/Romariojveloso-fiteclabs/cmdb-frontend-poc" target="_blank" rel="noopener noreferrer">
+                <Github size={15} aria-hidden="true" />
+                <span>{isPt ? 'Repositório' : 'Repository'}</span>
               </a>
-              <a className="site-footer__link" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
-                <span style={{ display: 'flex', color: '#D39A32' }}><Linkedin size={15} /></span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>LinkedIn</span>
+              <a href="https://github.com/Romariojveloso-fiteclabs/cmdb-frontend-poc/issues" target="_blank" rel="noopener noreferrer">
+                <MessageCircle size={15} aria-hidden="true" />
+                <span>{isPt ? 'Reportar problema' : 'Report an issue'}</span>
               </a>
-              <a className="site-footer__link" href="mailto:contato@cin.ufpe.br" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#A89A82', textDecoration: 'none' }}>
-                <span style={{ display: 'flex', color: '#D39A32' }}><Mail size={15} /></span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>contato@cin.ufpe.br</span>
+              <a href="https://www.linkedin.com/in/romario-jonas-veloso-427373175" target="_blank" rel="noopener noreferrer">
+                <Linkedin size={15} aria-hidden="true" />
+                <span>LinkedIn</span>
+              </a>
+              <a href="mailto:romariojonas@outlook.com.br">
+                <Mail size={15} aria-hidden="true" />
+                <span>{isPt ? 'E-mail' : 'Email'}</span>
               </a>
             </div>
           </div>
         </div>
 
-        <div style={{ borderTop: '1px solid #403C34', marginTop: '32px', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap', fontFamily: 'var(--font-mono)', fontSize: '11.5px' }}>
-          <span>{t.footerRights}</span>
-          <span>
-            {t.footerDevelopedBy}:{' '}
-            <a href="https://romariojonas.com" target="_blank" rel="noopener noreferrer" style={{ color: '#D39A32' }}>
-              Romário Jonas
-            </a>
-          </span>
+        <div className="site-footer__utility">
+          <nav className="site-footer__nav" aria-label={isPt ? 'Navegação do projeto' : 'Project navigation'}>
+            <button type="button" onClick={navigate('catalog')}>
+              {isPt ? 'Acervo' : 'Archive'}
+            </button>
+            <button type="button" onClick={navigate('inventory')}>
+              {isPt ? 'Inventário' : 'Inventory'}
+            </button>
+            <button type="button" onClick={navigate('guides')}>
+              {isPt ? 'Guias' : 'Guides'}
+            </button>
+            <button type="button" onClick={navigate('contribute')}>
+              {isPt ? 'Contribuir' : 'Contribute'}
+            </button>
+          </nav>
+
+          <div className="site-footer__meta">
+            <span>{t.footerRights}</span>
+            <span>{t.footerInstitution}</span>
+            <span>
+              {t.footerDevelopedBy}:{' '}
+              <a href="https://romariojonas.com" target="_blank" rel="noopener noreferrer">
+                Romário Jonas
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </footer>

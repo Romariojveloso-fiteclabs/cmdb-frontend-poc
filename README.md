@@ -17,7 +17,8 @@ npm install
 npm run dev
 ```
 
-A aplicação estará disponível em `http://localhost:4321/cmdb-frontend-poc/`.
+A aplicação estará disponível em `http://localhost:4321/`. O prefixo
+`/cmdb-frontend-poc/` é aplicado apenas ao build destinado ao GitHub Pages.
 
 ## Gerar a versão de produção
 
@@ -42,7 +43,7 @@ Os caminhos de recursos respeitam o prefixo `/cmdb-frontend-poc`, configurado em
 
 ## Aplicativo mobile (PWA)
 
-O site é responsivo e pode ser instalado como aplicativo em navegadores compatíveis. No Android ou em navegadores Chromium, use o botão **Instalar** exibido no cabeçalho. No iPhone e no iPad, abra o menu de compartilhamento do Safari e selecione **Adicionar à Tela de Início**.
+O site é responsivo e pode ser instalado como aplicativo em navegadores compatíveis. No Android ou em navegadores Chromium, use a opção **Instalar** exibida na tela. No iPhone e no iPad, o próprio aviso apresenta o caminho para **Adicionar à Tela de Início**.
 
 O PWA inclui manifest, ícones próprios e um service worker com suporte offline para a interface e para os recursos já visitados. A instalação e o cache offline exigem HTTPS, fornecido automaticamente pelo GitHub Pages.
 

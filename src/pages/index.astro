@@ -5,6 +5,7 @@ import '../styles/global.css';
 
 const manifestUrl = withBase('/manifest.webmanifest');
 const serviceWorkerUrl = withBase('/sw.js');
+const developmentServiceWorkerUrl = withBase('/sw-dev.js');
 const serviceWorkerScope = withBase('/');
 ---
 
@@ -27,12 +28,33 @@ const serviceWorkerScope = withBase('/');
   </head>
   <body>
     <AppContainer client:only="react" />
-    <script is:inline define:vars={{ serviceWorkerUrl, serviceWorkerScope }}>
+    <script is:inline define:vars={{ serviceWorkerUrl, developmentServiceWorkerUrl, serviceWorkerScope }}>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          const isAstroDevServer = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-            && window.location.port === '4321';
-          if (isAstroDevServer) return;
+        window.addEventListener('load', async () => {
+          const isLocalDevelopment = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+          if (isLocalDevelopment) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(
+              registrations
+                .filter((registration) => {
+                  const worker = registration.active || registration.waiting || registration.installing;
+                  return !worker?.scriptURL.endsWith(developmentServiceWorkerUrl);
+                })
+                .map((registration) => registration.unregister())
+            );
+
+            if ('caches' in window) {
+              const cacheNames = await caches.keys();
+              await Promise.all(
+                cacheNames
+                  .filter((cacheName) => cacheName.startsWith('cmdb-pwa'))
+                  .map((cacheName) => caches.delete(cacheName))
+              );
+            }
+            await navigator.serviceWorker.register(developmentServiceWorkerUrl, { scope: serviceWorkerScope });
+            return;
+          }
 
           navigator.serviceWorker.register(serviceWorkerUrl, { scope: serviceWorkerScope }).catch(() => {
             // The site remains fully usable when service workers are unavailable.

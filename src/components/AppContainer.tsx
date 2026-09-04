@@ -10,6 +10,7 @@ import { TemplatesView } from './TemplatesView';
 import { SecurityView } from './SecurityView';
 import { ContributeView } from './ContributeView';
 import { InventoryView } from './InventoryView';
+import { PwaInstallPrompt } from './PwaInstallPrompt';
 import { Lang } from '../data/families';
 
 export const AppContainer: React.FC = () => {
@@ -49,6 +50,7 @@ export const AppContainer: React.FC = () => {
         onNavigate={handleNavigate}
         onSetLang={setLang}
       />
+      <PwaInstallPrompt lang={lang} />
 
       <main style={{ flex: 1 }}>
         {screen === 'home' && (

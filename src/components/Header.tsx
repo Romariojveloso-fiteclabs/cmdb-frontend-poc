@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Download, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
 import { withBase } from '../utils/paths';
-import { usePwaInstall } from '../hooks/usePwaInstall';
 
 interface HeaderProps {
   currentScreen: string;
@@ -15,7 +14,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate, onSetLang }) => {
   const t = TRANSLATIONS[lang];
   const [menuOpen, setMenuOpen] = useState(false);
-  const { canInstall, install } = usePwaInstall();
 
   const navItems = [
     { key: 'home', label: lang === 'pt' ? 'Início' : 'Home' },
@@ -83,18 +81,6 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
         </nav>
 
         <div className="site-header__actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-          {canInstall && (
-            <button
-              type="button"
-              className="pwa-install-button"
-              onClick={install}
-              aria-label={lang === 'pt' ? 'Instalar aplicativo CMDB' : 'Install CMDB application'}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#B85C2E', color: '#FDFAF4', border: 0, borderRadius: '4px', padding: '7px 9px', fontSize: '11.5px', fontWeight: 600, cursor: 'pointer' }}
-            >
-              <Download size={14} />
-              <span>{lang === 'pt' ? 'Instalar' : 'Install'}</span>
-            </button>
-          )}
           <button
             onClick={() => onSetLang('pt')}
             style={{
