@@ -1,0 +1,22 @@
+---
+import { withBase } from '../utils/paths';
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Página não encontrada · Caatinga Malware DB</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <main class="not-found-page">
+      <span>ERRO 404</span>
+      <h1>Página não encontrada</h1>
+      <p>O endereço informado não corresponde a um conteúdo publicado no acervo.</p>
+      <a href={withBase('/')}>Voltar para o início</a>
+    </main>
+  </body>
+</html>

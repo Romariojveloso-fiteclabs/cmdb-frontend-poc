@@ -1,0 +1,18 @@
+---
+import AppLayout from '../../layouts/AppLayout.astro';
+import { LAB_GUIDES } from '../../data/guides';
+
+export function getStaticPaths() {
+  const guides = [...LAB_GUIDES.pt, ...LAB_GUIDES.en];
+  const uniqueGuides = Array.from(new Map(guides.map((guide) => [guide.id, guide])).values());
+
+  return uniqueGuides.map((guide) => ({
+    params: { guide: guide.id.toLowerCase() },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+---
+
+<AppLayout title={guide.title} description={guide.desc} />

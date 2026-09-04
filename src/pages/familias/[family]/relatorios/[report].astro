@@ -1,0 +1,25 @@
+---
+import AppLayout from '../../../../layouts/AppLayout.astro';
+import { FAMILIES } from '../../../../data/families';
+import { parseAllReportsFromMarkdown } from '../../../../data/markdownLoader';
+
+export function getStaticPaths() {
+  return parseAllReportsFromMarkdown().map((report) => {
+    const family = FAMILIES.find((item) => item.key === report.familyKey);
+    return {
+      params: {
+        family: report.familyKey,
+        report: report.id.toLowerCase(),
+      },
+      props: { family, report },
+    };
+  });
+}
+
+const { family, report } = Astro.props;
+---
+
+<AppLayout
+  title={`${report.id} · ${family?.disp || report.familyKey}`}
+  description={family?.headline.pt || report.title.pt}
+/>

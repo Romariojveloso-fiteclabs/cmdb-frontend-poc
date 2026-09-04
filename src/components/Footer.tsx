@@ -3,6 +3,7 @@ import { Github, Globe2, Linkedin, Mail, MessageCircle } from 'lucide-react';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
 import { withBase } from '../utils/paths';
+import { routeHref, screenRoute } from '../utils/routes';
 
 interface FooterProps {
   lang: Lang;
@@ -13,17 +14,21 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
   const t = TRANSLATIONS[lang];
   const isPt = lang === 'pt';
 
-  const navigate = (screen: string) => () => onNavigate(screen);
+  const routeLink = (screen: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    onNavigate(screen);
+  };
 
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__main">
           <div className="site-footer__identity">
-            <button
-              type="button"
+            <a
               className="site-footer__home"
-              onClick={navigate('home')}
+              href={routeHref(screenRoute('home'))}
+              onClick={routeLink('home')}
               aria-label={isPt ? 'Ir para o início' : 'Go to home'}
             >
               <img src={withBase('/assets/cmdb-logo.png')} alt="" />
@@ -31,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 <strong>Caatinga Malware DB</strong>
                 <small>UFPE - CTG</small>
               </span>
-            </button>
+            </a>
             <p>{t.footerNote}</p>
           </div>
 
@@ -64,18 +69,18 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
 
         <div className="site-footer__utility">
           <nav className="site-footer__nav" aria-label={isPt ? 'Navegação do projeto' : 'Project navigation'}>
-            <button type="button" onClick={navigate('catalog')}>
+            <a href={routeHref(screenRoute('catalog'))} onClick={routeLink('catalog')}>
               {isPt ? 'Acervo' : 'Archive'}
-            </button>
-            <button type="button" onClick={navigate('inventory')}>
+            </a>
+            <a href={routeHref(screenRoute('inventory'))} onClick={routeLink('inventory')}>
               {isPt ? 'Inventário' : 'Inventory'}
-            </button>
-            <button type="button" onClick={navigate('guides')}>
+            </a>
+            <a href={routeHref(screenRoute('guides'))} onClick={routeLink('guides')}>
               {isPt ? 'Guias' : 'Guides'}
-            </button>
-            <button type="button" onClick={navigate('contribute')}>
+            </a>
+            <a href={routeHref(screenRoute('contribute'))} onClick={routeLink('contribute')}>
               {isPt ? 'Contribuir' : 'Contribute'}
-            </button>
+            </a>
           </nav>
 
           <div className="site-footer__meta">

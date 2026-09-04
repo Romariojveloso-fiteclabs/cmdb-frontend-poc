@@ -1,0 +1,19 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+import { STATIC_ROUTES } from '../utils/routes';
+
+export function getStaticPaths() {
+  return STATIC_ROUTES.map((route) => ({
+    params: { page: route.slug },
+    props: { title: route.title },
+  }));
+}
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<AppLayout title={title} />

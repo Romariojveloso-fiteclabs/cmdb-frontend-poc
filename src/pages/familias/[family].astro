@@ -1,0 +1,15 @@
+---
+import AppLayout from '../../layouts/AppLayout.astro';
+import { FAMILIES } from '../../data/families';
+
+export function getStaticPaths() {
+  return FAMILIES.map((family) => ({
+    params: { family: family.key.toLowerCase() },
+    props: { family },
+  }));
+}
+
+const { family } = Astro.props;
+---
+
+<AppLayout title={family.disp} description={family.headline.pt} />

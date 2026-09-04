@@ -62,7 +62,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
     e.preventDefault();
     if (queryInput.trim()) {
       onSearch(queryInput.trim());
-      onNavigate('catalog');
     }
   };
 
@@ -194,10 +193,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                 {quickTerms.map((term, i) => (
                   <button
                     key={i}
-                    onClick={() => {
-                      onSearch(term.query);
-                      onNavigate('catalog');
-                    }}
+                    onClick={() => onSearch(term.query)}
                     style={{
                       background: 'transparent',
                       border: '1px solid #537760',

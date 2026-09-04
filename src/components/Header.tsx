@@ -3,6 +3,7 @@ import { Menu, Moon, Sun, X } from 'lucide-react';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
 import { withBase } from '../utils/paths';
+import { routeHref, screenRoute } from '../utils/routes';
 
 interface HeaderProps {
   currentScreen: string;
@@ -34,14 +35,20 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
     onNavigate(screen);
   };
 
+  const handleRouteClick = (event: React.MouseEvent<HTMLAnchorElement>, screen: string) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    navigate(screen);
+  };
+
   return (
     <header className="site-header" style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--header-background)', color: 'var(--header-text)', borderBottom: '3px solid var(--info-color)' }}>
       <div className="site-header__inner" style={{ maxWidth: '1180px', margin: '0 auto', padding: '14px 28px', display: 'flex', alignItems: 'center', gap: '28px' }}>
-        <button
-          type="button"
+        <a
+          href={routeHref(screenRoute('home'))}
           className="site-brand"
           style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: 0, border: 0, background: 'transparent', color: 'inherit', textAlign: 'left' }}
-          onClick={() => navigate('home')}
+          onClick={(event) => handleRouteClick(event, 'home')}
         >
           <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', background: 'var(--header-logo-background)', borderRadius: '5px', flex: 'none' }}>
             <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '32px', height: '32px', objectFit: 'contain', display: 'block' }} />
@@ -54,15 +61,16 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
               {t.brandSub}
             </span>
           </span>
-        </button>
+        </a>
 
         <nav id="main-navigation" className={`site-nav${menuOpen ? ' site-nav--open' : ''}`} style={{ display: 'flex', gap: '2px', flex: 1, flexWrap: 'wrap' }}>
           {navItems.map((item) => {
             const isActive = item.key === activeKey;
             return (
-              <button
+              <a
                 key={item.key}
-                onClick={() => navigate(item.key)}
+                href={routeHref(screenRoute(item.key))}
+                onClick={(event) => handleRouteClick(event, item.key)}
                 style={{
                   background: isActive ? 'var(--header-active-background)' : 'transparent',
                   color: isActive ? 'var(--header-text)' : 'var(--header-muted)',
@@ -73,11 +81,12 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
                   fontSize: '13px',
                   fontWeight: 500,
                   cursor: 'pointer',
-                  transition: 'background .15s'
+                  transition: 'background .15s',
+                  textDecoration: 'none'
                 }}
               >
                 {item.label}
-              </button>
+              </a>
             );
           })}
         </nav>

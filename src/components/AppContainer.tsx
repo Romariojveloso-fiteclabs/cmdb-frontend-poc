@@ -11,7 +11,20 @@ import { SecurityView } from './SecurityView';
 import { ContributeView } from './ContributeView';
 import { InventoryView } from './InventoryView';
 import { PwaInstallPrompt } from './PwaInstallPrompt';
-import { Lang } from '../data/families';
+import { FAMILIES, Lang } from '../data/families';
+import { AppRoute, parseAppRoute, routeHref, screenRoute } from '../utils/routes';
+
+const defaultRoute: AppRoute = { screen: 'home' };
+
+function currentRoute(): AppRoute {
+  if (typeof window === 'undefined') return defaultRoute;
+  return parseAppRoute(window.location.pathname) || defaultRoute;
+}
+
+function currentSearchQuery(): string {
+  if (typeof window === 'undefined') return '';
+  return new URLSearchParams(window.location.search).get('busca') || '';
+}
 
 export const AppContainer: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -20,11 +33,9 @@ export const AppContainer: React.FC = () => {
     if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
-  const [screen, setScreen] = useState<string>('home');
+  const [route, setRoute] = useState<AppRoute>(currentRoute);
   const [lang, setLang] = useState<Lang>('pt');
-  const [selectedFamily, setSelectedFamily] = useState<string>('akira');
-  const [selectedReport, setSelectedReport] = useState<string>('CMDB-TR-006');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(currentSearchQuery);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -55,32 +66,66 @@ export const AppContainer: React.FC = () => {
     });
   };
 
-  const handleNavigate = (targetScreen: string) => {
-    setScreen(targetScreen);
+  useEffect(() => {
+    const handleHistoryNavigation = () => {
+      setRoute(currentRoute());
+      setSearchQuery(currentSearchQuery());
+    };
+
+    window.addEventListener('popstate', handleHistoryNavigation);
+    return () => window.removeEventListener('popstate', handleHistoryNavigation);
+  }, []);
+
+  useEffect(() => {
+    const family = route.familyKey
+      ? FAMILIES.find((item) => item.key === route.familyKey)
+      : undefined;
+    const titles: Record<string, string> = {
+      home: 'Caatinga Malware DB',
+      catalog: lang === 'pt' ? 'Explorar malwares' : 'Explore malware',
+      inventory: lang === 'pt' ? 'Inventário de malwares' : 'Malware inventory',
+      guides: lang === 'pt' ? 'Guias de laboratório' : 'Laboratory guides',
+      templates: lang === 'pt' ? 'Modelos de documentação' : 'Documentation templates',
+      security: lang === 'pt' ? 'Segurança' : 'Safety',
+      contribute: lang === 'pt' ? 'Contribuir' : 'Contribute',
+      family: family?.disp || 'Caatinga Malware DB',
+      report: route.reportId ? `${route.reportId} · ${family?.disp || ''}` : 'Caatinga Malware DB',
+    };
+    const title = titles[route.screen];
+    document.title = title === 'Caatinga Malware DB' ? title : `${title} · Caatinga Malware DB`;
+  }, [lang, route]);
+
+  const navigate = (nextRoute: AppRoute, search = '') => {
+    const href = `${routeHref(nextRoute)}${search}`;
+    const currentHref = `${window.location.pathname}${window.location.search}`;
+    if (href !== currentHref) window.history.pushState({}, '', href);
+    setRoute(nextRoute);
+    setSearchQuery(new URLSearchParams(search).get('busca') || '');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigate = (targetScreen: string) => {
+    navigate(screenRoute(targetScreen));
   };
 
   const handleOpenFamily = (familyKey: string) => {
-    setSelectedFamily(familyKey);
-    setScreen('family');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate({ screen: 'family', familyKey });
   };
 
   const handleOpenReport = (reportId: string, familyKey: string) => {
-    setSelectedReport(reportId);
-    setSelectedFamily(familyKey);
-    setScreen('report');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate({ screen: 'report', reportId, familyKey });
   };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    const params = new URLSearchParams({ busca: query });
+    navigate({ screen: 'catalog' }, `?${params.toString()}`);
   };
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--surface-ground)', fontFamily: 'var(--font-sans)', color: 'var(--text-color)', display: 'flex', flexDirection: 'column' }}>
       <Header
-        currentScreen={screen}
+        currentScreen={route.screen}
         lang={lang}
         onNavigate={handleNavigate}
         onSetLang={setLang}
@@ -90,7 +135,7 @@ export const AppContainer: React.FC = () => {
       <PwaInstallPrompt lang={lang} />
 
       <main style={{ flex: 1 }}>
-        {screen === 'home' && (
+        {route.screen === 'home' && (
           <HomeView
             lang={lang}
             onNavigate={handleNavigate}
@@ -99,7 +144,7 @@ export const AppContainer: React.FC = () => {
           />
         )}
 
-        {screen === 'catalog' && (
+        {route.screen === 'catalog' && (
           <CatalogView
             lang={lang}
             initialQuery={searchQuery}
@@ -107,13 +152,13 @@ export const AppContainer: React.FC = () => {
           />
         )}
 
-        {screen === 'inventory' && (
+        {route.screen === 'inventory' && (
           <InventoryView lang={lang} onOpenFamily={handleOpenFamily} />
         )}
 
-        {screen === 'family' && (
+        {route.screen === 'family' && route.familyKey && (
           <FamilyDetailView
-            familyKey={selectedFamily}
+            familyKey={route.familyKey}
             lang={lang}
             onNavigate={handleNavigate}
             onOpenReport={handleOpenReport}
@@ -121,28 +166,33 @@ export const AppContainer: React.FC = () => {
           />
         )}
 
-        {screen === 'report' && (
+        {route.screen === 'report' && route.reportId && route.familyKey && (
           <ReportView
-            reportId={selectedReport}
-            familyKey={selectedFamily}
+            reportId={route.reportId}
+            familyKey={route.familyKey}
             lang={lang}
             onNavigate={handleNavigate}
           />
         )}
 
-        {screen === 'guides' && (
-          <GuidesView lang={lang} />
+        {route.screen === 'guides' && (
+          <GuidesView
+            lang={lang}
+            selectedGuideId={route.guideId}
+            onNavigate={handleNavigate}
+            onOpenGuide={(guideId) => navigate({ screen: 'guides', guideId })}
+          />
         )}
 
-        {screen === 'templates' && (
+        {route.screen === 'templates' && (
           <TemplatesView lang={lang} />
         )}
 
-        {screen === 'security' && (
+        {route.screen === 'security' && (
           <SecurityView lang={lang} />
         )}
 
-        {screen === 'contribute' && (
+        {route.screen === 'contribute' && (
           <ContributeView lang={lang} />
         )}
       </main>

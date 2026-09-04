@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BookOpen, ArrowLeft } from 'lucide-react';
 import { parseAllGuidesFromMarkdown } from '../data/markdownLoader';
 import { Lang } from '../data/families';
@@ -6,22 +6,29 @@ import { TRANSLATIONS } from '../data/i18n';
 
 interface GuidesViewProps {
   lang: Lang;
+  selectedGuideId?: string;
+  onNavigate: (screen: string) => void;
+  onOpenGuide: (guideId: string) => void;
 }
 
-export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
+export const GuidesView: React.FC<GuidesViewProps> = ({
+  lang,
+  selectedGuideId,
+  onNavigate,
+  onOpenGuide,
+}) => {
   const t = TRANSLATIONS[lang];
   const allGuides = parseAllGuidesFromMarkdown();
   const guidesList = lang === 'pt' ? allGuides.pt : (allGuides.en.length ? allGuides.en : allGuides.pt);
 
-  const [selectedGuideId, setSelectedGuideId] = useState<string | null>(null);
-
-  const selectedGuide = guidesList.find((g) => g.id === selectedGuideId);
+  const selectedGuide = guidesList.find((g) => g.id === selectedGuideId)
+    || [...allGuides.pt, ...allGuides.en].find((g) => g.id === selectedGuideId);
 
   if (selectedGuide) {
     return (
       <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
         <button
-          onClick={() => setSelectedGuideId(null)}
+          onClick={() => onNavigate('guides')}
           style={{
             background: 'none',
             border: 'none',
@@ -86,7 +93,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
         {guidesList.map((g) => (
           <article
             key={g.id}
-            onClick={() => setSelectedGuideId(g.id)}
+            onClick={() => onOpenGuide(g.id)}
             style={{
               background: 'var(--surface-card)',
               border: '1px solid var(--surface-border)',
@@ -121,7 +128,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ lang }) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedGuideId(g.id);
+                  onOpenGuide(g.id);
                 }}
                 style={{
                   background: 'var(--primary-color)',
