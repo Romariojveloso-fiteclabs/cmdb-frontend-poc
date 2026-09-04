@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ExternalLink, Search } from 'lucide-react';
 import { Lang } from '../data/families';
 import {
@@ -15,6 +15,25 @@ interface InventoryViewProps {
 type MatchFilter = 'all' | 'confirmed' | 'not-confirmed';
 type PresenceFilter = 'all' | 'confirmed' | 'not-confirmed' | 'absent';
 type CmdbFilter = 'all' | 'documented' | 'not-documented';
+
+function inventoryParam(name: string): string | null {
+  if (typeof window === 'undefined') return null;
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+function inventoryFilterParam<T extends string>(
+  name: string,
+  allowedValues: readonly T[],
+  fallback: T,
+): T {
+  const value = inventoryParam(name) as T | null;
+  return value && allowedValues.includes(value) ? value : fallback;
+}
+
+function inventoryPageParam(): number {
+  const page = Number(inventoryParam('pagina') || 1);
+  return Number.isInteger(page) && page > 0 ? page - 1 : 0;
+}
 
 const copy = {
   pt: {
@@ -109,12 +128,20 @@ function presenceLabel(status: InventoryPresence, lang: Lang) {
 
 export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily }) => {
   const t = copy[lang];
-  const [query, setQuery] = useState('');
-  const [noMoreRansomFilter, setNoMoreRansomFilter] = useState<PresenceFilter>('all');
-  const [matchFilter, setMatchFilter] = useState<MatchFilter>('all');
-  const [theZooFilter, setTheZooFilter] = useState<PresenceFilter>('all');
-  const [cmdbFilter, setCmdbFilter] = useState<CmdbFilter>('all');
-  const [page, setPage] = useState(0);
+  const [query, setQuery] = useState(() => inventoryParam('busca') || '');
+  const [noMoreRansomFilter, setNoMoreRansomFilter] = useState<PresenceFilter>(() =>
+    inventoryFilterParam('nomoreransom', ['all', 'confirmed', 'absent'] as const, 'all'),
+  );
+  const [matchFilter, setMatchFilter] = useState<MatchFilter>(() =>
+    inventoryFilterParam('malwarebazaar', ['all', 'confirmed', 'not-confirmed'] as const, 'all'),
+  );
+  const [theZooFilter, setTheZooFilter] = useState<PresenceFilter>(() =>
+    inventoryFilterParam('thezoo', ['all', 'confirmed', 'not-confirmed', 'absent'] as const, 'all'),
+  );
+  const [cmdbFilter, setCmdbFilter] = useState<CmdbFilter>(() =>
+    inventoryFilterParam('cmdb', ['all', 'documented', 'not-documented'] as const, 'all'),
+  );
+  const [page, setPage] = useState(inventoryPageParam);
   const topScrollRef = useRef<HTMLDivElement>(null);
   const tableScrollRef = useRef<HTMLDivElement>(null);
   const pageSize = 20;
@@ -145,6 +172,20 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
   const totalPages = Math.max(1, Math.ceil(filteredRecords.length / pageSize));
   const currentPage = Math.min(page, totalPages - 1);
   const visibleRecords = filteredRecords.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (query.trim()) params.set('busca', query.trim());
+    if (noMoreRansomFilter !== 'all') params.set('nomoreransom', noMoreRansomFilter);
+    if (matchFilter !== 'all') params.set('malwarebazaar', matchFilter);
+    if (theZooFilter !== 'all') params.set('thezoo', theZooFilter);
+    if (cmdbFilter !== 'all') params.set('cmdb', cmdbFilter);
+    if (currentPage > 0) params.set('pagina', String(currentPage + 1));
+
+    const queryString = params.toString();
+    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`;
+    window.history.replaceState(window.history.state, '', nextUrl);
+  }, [cmdbFilter, currentPage, matchFilter, noMoreRansomFilter, query, theZooFilter]);
 
   const clearAllFilters = () => {
     setQuery('');

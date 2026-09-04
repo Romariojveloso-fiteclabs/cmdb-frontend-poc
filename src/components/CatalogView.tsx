@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { FAMILIES, DIMENSIONS, SAMPLE_SHAS, Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
@@ -9,15 +9,30 @@ interface CatalogViewProps {
   onOpenFamily: (key: string) => void;
 }
 
+function catalogParam(name: string): string | null {
+  if (typeof window === 'undefined') return null;
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+function catalogFilterParam(name: string, allowedValues: string[]): string {
+  const value = catalogParam(name);
+  return value && allowedValues.includes(value) ? value : 'all';
+}
+
+function catalogPageParam(): number {
+  const page = Number(catalogParam('pagina') || 1);
+  return Number.isInteger(page) && page > 0 ? page - 1 : 0;
+}
+
 export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '', onOpenFamily }) => {
   const t = TRANSLATIONS[lang];
 
-  const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [platFilter, setPlatFilter] = useState<string>('all');
-  const [edFilter, setEdFilter] = useState<string>('all');
-  const [evFilter, setEvFilter] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
-  const [page, setPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState(initialQuery || catalogParam('busca') || '');
+  const [platFilter, setPlatFilter] = useState<string>(() => catalogFilterParam('plataforma', ['Windows', 'Linux']));
+  const [edFilter, setEdFilter] = useState<string>(() => catalogFilterParam('editorial', Object.keys(DIMENSIONS.ed)));
+  const [evFilter, setEvFilter] = useState<string>(() => catalogFilterParam('evidencia', Object.keys(DIMENSIONS.ev)));
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>(() => catalogParam('visualizacao') === 'tabela' ? 'table' : 'cards');
+  const [page, setPage] = useState(catalogPageParam);
 
   const pageSize = 4;
 
@@ -37,6 +52,20 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
   const totalPages = Math.ceil(filteredFamilies.length / pageSize) || 1;
   const currentPage = Math.min(page, totalPages - 1);
   const paginatedFamilies = filteredFamilies.slice(currentPage * pageSize, currentPage * pageSize + pageSize);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (searchQuery.trim()) params.set('busca', searchQuery.trim());
+    if (platFilter !== 'all') params.set('plataforma', platFilter);
+    if (edFilter !== 'all') params.set('editorial', edFilter);
+    if (evFilter !== 'all') params.set('evidencia', evFilter);
+    if (viewMode === 'table') params.set('visualizacao', 'tabela');
+    if (currentPage > 0) params.set('pagina', String(currentPage + 1));
+
+    const queryString = params.toString();
+    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`;
+    window.history.replaceState(window.history.state, '', nextUrl);
+  }, [currentPage, edFilter, evFilter, platFilter, searchQuery, viewMode]);
 
   const clearAllFilters = () => {
     setSearchQuery('');
