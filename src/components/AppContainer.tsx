@@ -11,6 +11,7 @@ import { SecurityView } from './SecurityView';
 import { ContributeView } from './ContributeView';
 import { InventoryView } from './InventoryView';
 import { PwaInstallPrompt } from './PwaInstallPrompt';
+import { EvidenceLightbox } from './EvidenceLightbox';
 import { FAMILIES, Lang } from '../data/families';
 import { AppRoute, parseAppRoute, routeHref, screenRoute } from '../utils/routes';
 
@@ -133,6 +134,7 @@ export const AppContainer: React.FC = () => {
         onToggleTheme={handleToggleTheme}
       />
       <PwaInstallPrompt lang={lang} />
+      <EvidenceLightbox lang={lang} />
 
       <main style={{ flex: 1 }}>
         {route.screen === 'home' && (

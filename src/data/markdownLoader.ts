@@ -83,6 +83,23 @@ const generalFiles = import.meta.glob("/src/content/docs/general/**/*.md", {
   eager: true,
 }) as Record<string, string>;
 
+const contentImageFiles = import.meta.glob(
+  [
+    "/src/content/docs/**/*.png",
+    "/src/content/docs/**/*.jpg",
+    "/src/content/docs/**/*.jpeg",
+    "/src/content/docs/**/*.gif",
+    "/src/content/docs/**/*.webp",
+    "/src/content/docs/**/*.svg",
+    "/src/content/docs/**/*.avif",
+  ],
+  {
+    query: "?url",
+    import: "default",
+    eager: true,
+  },
+) as Record<string, string>;
+
 function cleanHeadingText(value: string): string {
   return value
     .replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1")
@@ -124,38 +141,90 @@ function addHeadingIds(html: string): string {
   );
 }
 
-function renderMarkdown(markdownText: string): string {
-  return addHeadingIds(marked.parse(markdownText) as string);
+function makeImagesZoomable(html: string): string {
+  return html.replace(/<img\b([^>]*)>/gi, (_image, attributes: string) => {
+    let nextAttributes = attributes;
+    if (/\sclass=["'][^"']*["']/.test(nextAttributes)) {
+      nextAttributes = nextAttributes.replace(
+        /\sclass=(["'])([^"']*)\1/,
+        (_className, quote, classes) => ` class=${quote}${classes} markdown-evidence-image${quote}`,
+      );
+    } else {
+      nextAttributes += ' class="markdown-evidence-image"';
+    }
+    if (!/\stabindex=/.test(nextAttributes)) nextAttributes += ' tabindex="0"';
+    if (!/\srole=/.test(nextAttributes)) nextAttributes += ' role="button"';
+    return `<img${nextAttributes}>`;
+  });
 }
 
-function resolveImageUrls(markdownText: string, familyKey: string): string {
+function renderMarkdown(markdownText: string): string {
+  return makeImagesZoomable(addHeadingIds(marked.parse(markdownText) as string));
+}
+
+function normalizeContentPath(path: string): string {
+  const parts: string[] = [];
+
+  for (const part of path.split("/")) {
+    if (!part || part === ".") continue;
+    if (part === "..") parts.pop();
+    else parts.push(part);
+  }
+
+  return `/${parts.join("/")}`;
+}
+
+function resolveImageUrl(
+  source: string,
+  documentPath: string,
+  familyKey?: string,
+): string {
+  const cleanSource = source.trim();
+  if (!cleanSource || /^(?:[a-z]+:|\/\/|#)/i.test(cleanSource)) return cleanSource;
+
+  const base = import.meta.env.BASE_URL.endsWith("/")
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  if (cleanSource === base.slice(0, -1) || cleanSource.startsWith(base)) return cleanSource;
+
+  if (!cleanSource.startsWith("/")) {
+    const documentDirectory = documentPath.slice(0, documentPath.lastIndexOf("/"));
+    const contentPath = normalizeContentPath(`${documentDirectory}/${cleanSource}`);
+    const decodedContentPath = (() => {
+      try {
+        return decodeURIComponent(contentPath);
+      } catch {
+        return contentPath;
+      }
+    })();
+    const importedUrl = contentImageFiles[contentPath] || contentImageFiles[decodedContentPath];
+    if (importedUrl) return importedUrl;
+  }
+
+  if (familyKey && /(?:^|\/)img\//.test(cleanSource)) {
+    const fileName = cleanSource.split("/img/").pop() || cleanSource.replace(/^\.?\/?img\//, "");
+    return withBase(`/reports/${familyKey}/img/${fileName}`);
+  }
+
+  return cleanSource.startsWith("/") ? withBase(cleanSource) : cleanSource;
+}
+
+function resolveImageUrls(
+  markdownText: string,
+  documentPath: string,
+  familyKey?: string,
+): string {
   let text = markdownText.replace(
     /!\[([^\]]*)\]\(([^)]+)\)/g,
     (match, alt, src) => {
-      let cleanSrc = src.trim();
-      if (cleanSrc.includes("/img/")) {
-        const fileName = cleanSrc.split("/img/").pop();
-        cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
-      } else if (cleanSrc.startsWith("img/")) {
-        const fileName = cleanSrc.replace("img/", "");
-        cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
-      }
-      return `![${alt}](${cleanSrc})`;
+      return `![${alt}](${resolveImageUrl(src, documentPath, familyKey)})`;
     },
   );
 
   text = text.replace(
     /<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi,
     (match, before, src, after) => {
-      let cleanSrc = src.trim();
-      if (cleanSrc.includes("/img/")) {
-        const fileName = cleanSrc.split("/img/").pop();
-        cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
-      } else if (cleanSrc.startsWith("img/")) {
-        const fileName = cleanSrc.replace("img/", "");
-        cleanSrc = withBase(`/reports/${familyKey}/img/${fileName}`);
-      }
-      return `<img ${before}src="${cleanSrc}"${after}>`;
+      return `<img ${before}src="${resolveImageUrl(src, documentPath, familyKey)}"${after}>`;
     },
   );
 
@@ -356,7 +425,7 @@ export function parseAllReportsFromMarkdown(): ParsedReportDocument[] {
     const bilingual = !isPt && !isEn ? splitBiLangMarkdown(rawText) : null;
 
     const setLanguageContent = (language: Lang, content: string) => {
-      const resolvedContent = resolveImageUrls(content, familyKey);
+      const resolvedContent = resolveImageUrls(content, path, familyKey);
       existing.title[language] = markdownTitle(content, reportId);
       existing.htmlContent[language] = renderMarkdown(resolvedContent);
       existing.toc[language] = extractToc(content);
@@ -392,7 +461,13 @@ export function parseAllReportsFromMarkdown(): ParsedReportDocument[] {
 export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
   const familyMap: Record<
     string,
-    { ptRaw?: string; enRaw?: string; key: string }
+    {
+      ptRaw?: string;
+      enRaw?: string;
+      ptPath?: string;
+      enPath?: string;
+      key: string;
+    }
   > = {};
 
   for (const path in reportFiles) {
@@ -408,16 +483,26 @@ export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
 
     if (lowerPath.includes("pt-br") || lowerPath.includes("-pt.")) {
       familyMap[folderName].ptRaw = content;
+      familyMap[folderName].ptPath = path;
     } else if (lowerPath.includes("-en.") || lowerPath.includes("en.md")) {
       familyMap[folderName].enRaw = content;
+      familyMap[folderName].enPath = path;
     } else {
       const split = splitBiLangMarkdown(content);
       if (split.pt !== split.en) {
         familyMap[folderName].ptRaw = split.pt;
         familyMap[folderName].enRaw = split.en;
+        familyMap[folderName].ptPath = path;
+        familyMap[folderName].enPath = path;
       } else {
-        if (!familyMap[folderName].ptRaw) familyMap[folderName].ptRaw = content;
-        if (!familyMap[folderName].enRaw) familyMap[folderName].enRaw = content;
+        if (!familyMap[folderName].ptRaw) {
+          familyMap[folderName].ptRaw = content;
+          familyMap[folderName].ptPath = path;
+        }
+        if (!familyMap[folderName].enRaw) {
+          familyMap[folderName].enRaw = content;
+          familyMap[folderName].enPath = path;
+        }
       }
     }
   }
@@ -430,8 +515,10 @@ export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
     let ptRaw = item.ptRaw || item.enRaw || "";
     let enRaw = item.enRaw || item.ptRaw || "";
 
-    ptRaw = resolveImageUrls(ptRaw, key);
-    enRaw = resolveImageUrls(enRaw, key);
+    const ptPath = item.ptPath || item.enPath || "";
+    const enPath = item.enPath || item.ptPath || "";
+    ptRaw = resolveImageUrls(ptRaw, ptPath, key);
+    enRaw = resolveImageUrls(enRaw, enPath, key);
 
     const firstLine =
       ptRaw.split("\n").find((l) => l.startsWith("# ")) ||
@@ -594,7 +681,7 @@ export function parseAllGuidesFromMarkdown() {
           .replace(/^-|-$/g, "")
           .toUpperCase();
 
-    const htmlContent = renderMarkdown(rawText);
+    const htmlContent = renderMarkdown(resolveImageUrls(rawText, path));
 
     const item = {
       id,

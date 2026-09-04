@@ -863,6 +863,161 @@ svg {
 
 }
 
+[data-evidence-lightbox],
+.markdown-evidence-image {
+  cursor: zoom-in;
+}
+
+.family-evidence-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 240px;
+  padding: 10px;
+  overflow: hidden;
+  background-color: var(--surface-100);
+  background-image:
+    linear-gradient(45deg, var(--surface-card) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--surface-card) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--surface-card) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--surface-card) 75%);
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-size: 16px 16px;
+}
+
+.family-evidence-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+[data-evidence-lightbox]:focus-visible,
+.markdown-evidence-image:focus-visible {
+  outline: 3px solid var(--color-accent, #d99a2b);
+  outline-offset: 3px;
+}
+
+.evidence-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right))
+    max(14px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+  color: #f6f1e8;
+  background: rgba(7, 10, 9, 0.94);
+  backdrop-filter: blur(8px);
+  animation: evidence-lightbox-in 160ms ease-out;
+}
+
+.evidence-lightbox__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: min(100%, 1440px);
+  margin: 0 auto;
+}
+
+.evidence-lightbox__toolbar > strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #f6f1e8;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.evidence-lightbox__controls {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.evidence-lightbox__controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #f6f1e8;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.evidence-lightbox__controls button:hover:not(:disabled),
+.evidence-lightbox__controls button:focus-visible {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.evidence-lightbox__controls button:focus-visible {
+  outline: 2px solid #e6a632;
+  outline-offset: 2px;
+}
+
+.evidence-lightbox__controls button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.evidence-lightbox__controls .evidence-lightbox__zoom-value {
+  gap: 7px;
+  min-width: 82px;
+  font-variant-numeric: tabular-nums;
+}
+
+.evidence-lightbox__controls .evidence-lightbox__close {
+  margin-left: 5px;
+}
+
+.evidence-lightbox__stage {
+  width: min(100%, 1440px);
+  min-height: 0;
+  margin: 0 auto;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.035);
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(255, 255, 255, 0.32) transparent;
+}
+
+.evidence-lightbox__stage img {
+  display: block;
+  height: auto;
+  margin: auto;
+  object-fit: contain;
+  transition: width 150ms ease-out;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.evidence-lightbox__hint {
+  margin: 0;
+  color: rgba(246, 241, 232, 0.7);
+  font-size: 12px;
+  text-align: center;
+}
+
+@keyframes evidence-lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 600px) {
   body {
     padding-bottom: env(safe-area-inset-bottom);
@@ -905,6 +1060,45 @@ svg {
 
   .pwa-install-prompt__actions button {
     min-height: 42px;
+  }
+
+  .evidence-lightbox {
+    gap: 9px;
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+      max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  }
+
+  .evidence-lightbox__toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .evidence-lightbox__toolbar > strong {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .evidence-lightbox__controls {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .evidence-lightbox__controls button {
+    min-width: 44px;
+    height: 44px;
+  }
+
+  .evidence-lightbox__controls .evidence-lightbox__close {
+    margin-left: auto;
+  }
+
+  .evidence-lightbox__stage img {
+    max-height: calc(100vh - 170px);
+  }
+
+  .evidence-lightbox__hint {
+    font-size: 11px;
   }
 
   .page-shell,
@@ -1024,6 +1218,14 @@ svg {
 
   .pwa-install-prompt {
     animation: none;
+  }
+
+  .evidence-lightbox {
+    animation: none;
+  }
+
+  .evidence-lightbox__stage img {
+    transition: none;
   }
 }
 

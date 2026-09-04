@@ -260,8 +260,17 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
                 <div className="family-evidence-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
                   {evidenceList.map((ev, idx) => (
                     <figure key={idx} style={{ margin: 0, background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', overflow: 'hidden' }}>
-                      <div style={{ height: '220px', background: 'var(--surface-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                        <img src={ev.imgUrl} alt={ev.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <div className="family-evidence-image">
+                        <img
+                          src={ev.imgUrl}
+                          alt={ev.title}
+                          loading="lazy"
+                          decoding="async"
+                          data-evidence-lightbox
+                          role="button"
+                          tabIndex={0}
+                          aria-label={lang === 'pt' ? `Ampliar evidência: ${ev.title}` : `Expand evidence: ${ev.title}`}
+                        />
                       </div>
                       <figcaption style={{ padding: '14px 16px' }}>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', color: 'var(--info-color)', marginBottom: '6px' }}>{ev.figNum}</div>
