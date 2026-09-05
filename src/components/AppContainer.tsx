@@ -43,7 +43,7 @@ export const AppContainer: React.FC = () => {
     document.documentElement.style.colorScheme = theme;
     document.querySelector('meta[name="theme-color"]')?.setAttribute(
       'content',
-      theme === 'dark' ? '#14211A' : '#243A2E'
+      theme === 'dark' ? '#551B26' : '#780C18'
     );
   }, [theme]);
 

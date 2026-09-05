@@ -242,7 +242,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
             <div style={{ border: '1px solid var(--surface-border)', borderRadius: '6px', overflowX: 'auto', background: 'var(--surface-card)' }}>
               <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
                 <thead>
-                  <tr style={{ background: 'var(--brand-panel-background)', color: 'var(--brand-panel-text)' }}>
+                  <tr style={{ background: 'var(--table-header-background)', color: 'var(--table-header-text)' }}>
                     <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Família' : 'Family'}</th>
                     <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Relatório' : 'Report'}</th>
                     <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Categoria' : 'Category'}</th>

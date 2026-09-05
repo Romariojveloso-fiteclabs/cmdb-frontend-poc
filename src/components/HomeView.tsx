@@ -86,11 +86,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
 
   return (
     <div>
-      <section className="home-hero" style={{ background: 'var(--brand-panel-background)', color: 'var(--brand-panel-text)', padding: '72px 28px 64px' }}>
+      <section className="home-hero" style={{ color: 'var(--brand-panel-text)', padding: '72px 28px 64px' }}>
         <div className="home-hero-grid" style={{ maxWidth: '1180px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 1fr)', gap: '64px', alignItems: 'stretch' }}>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
             <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.18em', color: 'var(--warning-color)', marginBottom: '18px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.18em', color: 'var(--brand-panel-accent)', marginBottom: '18px' }}>
                 {t.eyebrow}
               </div>
               <h1 className="home-hero-title" style={{ fontFamily: 'var(--font-accent)', fontSize: '42px', lineHeight: 1.24, fontWeight: 600, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -98,18 +98,16 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                   <span key={idx} style={{ whiteSpace: 'nowrap' }}>{ln}</span>
                 ))}
               </h1>
-              <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#D8E3DA', maxWidth: '56ch', margin: '0 0 30px' }}>
+              <p style={{ fontSize: '17px', lineHeight: 1.6, color: 'var(--brand-panel-muted)', maxWidth: '56ch', margin: '0 0 30px' }}>
                 {t.heroSub}
               </p>
             </div>
             
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <button
+                className="home-hero-primary"
                 onClick={() => onNavigate('catalog')}
                 style={{
-                  background: 'var(--info-color)',
-                  color: 'var(--surface-card)',
-                  border: '1px solid var(--info-color)',
                   borderRadius: '5px',
                   padding: '10px 20px',
                   fontSize: '14px',
@@ -129,7 +127,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                 style={{
                   background: 'transparent',
                   color: 'var(--brand-panel-text)',
-                  border: '1px solid #537760',
+                  border: '1px solid var(--brand-panel-border)',
                   borderRadius: '5px',
                   padding: '10px 20px',
                   fontSize: '14px',
@@ -147,43 +145,26 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '16px 28px', background: 'var(--brand-panel-text)' }}>
-              <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" style={{ width: '100%', maxWidth: '300px', height: '196px', objectFit: 'contain', display: 'block' }} />
+            <div className="home-brand-card">
+              <img src={withBase('/assets/cmdb-logo.png')} alt="Caatinga Malware DB" />
             </div>
 
-            <div style={{ background: 'rgba(243,235,221,.06)', border: '1px solid #537760', borderRadius: '6px', padding: '24px' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.16em', color: 'var(--warning-color)', marginBottom: '14px' }}>
+            <div className="home-search-panel">
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.16em', color: 'var(--brand-panel-accent)', marginBottom: '14px' }}>
                 {t.searchLabel}
               </div>
-              <form className="home-search-form" onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px' }}>
+              <form className="home-search-form" onSubmit={handleSearchSubmit}>
                 <input
                   type="text"
+                  aria-label={t.searchLabel}
                   value={queryInput}
                   onChange={(e) => setQueryInput(e.target.value)}
                   placeholder={t.searchPh}
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    borderRadius: '4px',
-                    border: '1px solid var(--input-border)',
-                    background: 'var(--surface-card)',
-                    color: 'var(--text-color)',
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '13.5px'
-                  }}
                 />
                 <button
+                  className="home-search-submit"
                   type="submit"
-                  style={{
-                    background: 'var(--primary-color)',
-                    color: 'var(--primary-color-text)',
-                    border: '1px solid #537760',
-                    borderRadius: '4px',
-                    padding: '0 16px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
+                  aria-label={lang === 'pt' ? 'Buscar no acervo' : 'Search the archive'}
                 >
                   <Search size={16} />
                 </button>
@@ -196,8 +177,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
                     onClick={() => onSearch(term.query)}
                     style={{
                       background: 'transparent',
-                      border: '1px solid #537760',
-                      color: '#D8E3DA',
+                      border: '1px solid var(--brand-panel-border)',
+                      color: 'var(--brand-panel-muted)',
                       fontFamily: 'var(--font-mono)',
                       fontSize: '11px',
                       padding: '4px 9px',

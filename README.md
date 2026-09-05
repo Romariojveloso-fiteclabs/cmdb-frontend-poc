@@ -8,6 +8,10 @@ Prova de conceito da interface web do **Caatinga Malware DB (CMDB)**, um acervo 
 - React
 - TypeScript
 
+## Identidade visual
+
+A interface incorpora cores observadas no portal da UFPE e no site do projeto de extensão, com versões clara e escura. A [documentação da paleta](docs/identidade-visual.md) registra as fontes, os valores extraídos e sua aplicação no CMDB.
+
 ## Executar localmente
 
 Requisitos: Node.js 22 ou superior e npm.

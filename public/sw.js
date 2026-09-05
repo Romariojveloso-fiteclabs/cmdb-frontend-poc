@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'cmdb-pwa';
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v6';
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
 const SCOPE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '');
 const withScope = (path) => `${SCOPE_PATH}/${path.replace(/^\/+/, '')}`;

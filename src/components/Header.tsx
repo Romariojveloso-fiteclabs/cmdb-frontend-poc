@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
   };
 
   return (
-    <header className="site-header" style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--header-background)', color: 'var(--header-text)', borderBottom: '3px solid var(--info-color)' }}>
+    <header className="site-header" style={{ position: 'sticky', top: 0, zIndex: 30, color: 'var(--header-text)' }}>
       <div className="site-header__inner" style={{ maxWidth: '1180px', margin: '0 auto', padding: '14px 28px', display: 'flex', alignItems: 'center', gap: '28px' }}>
         <a
           href={routeHref(screenRoute('home'))}
@@ -70,6 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
               <a
                 key={item.key}
                 href={routeHref(screenRoute(item.key))}
+                aria-current={isActive ? 'page' : undefined}
                 onClick={(event) => handleRouteClick(event, item.key)}
                 style={{
                   background: isActive ? 'var(--header-active-background)' : 'transparent',
@@ -102,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
               fontFamily: 'var(--font-mono)',
               fontSize: '12px',
               fontWeight: 600,
-              color: lang === 'pt' ? 'var(--warning-color)' : 'var(--header-muted)'
+              color: lang === 'pt' ? 'var(--brand-panel-accent)' : 'var(--header-muted)'
             }}
           >
             PT
@@ -118,7 +119,7 @@ export const Header: React.FC<HeaderProps> = ({ currentScreen, lang, onNavigate,
               fontFamily: 'var(--font-mono)',
               fontSize: '12px',
               fontWeight: 600,
-              color: lang === 'en' ? 'var(--warning-color)' : 'var(--header-muted)'
+              color: lang === 'en' ? 'var(--brand-panel-accent)' : 'var(--header-muted)'
             }}
           >
             EN

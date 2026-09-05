@@ -9,8 +9,8 @@
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "any",
-  "background_color": "#F3EBDD",
-  "theme_color": "#243A2E",
+  "background_color": "#FAFAFA",
+  "theme_color": "#780C18",
   "categories": ["education", "security", "reference"],
   "icons": [
     {

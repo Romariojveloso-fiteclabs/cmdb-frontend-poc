@@ -27,7 +27,7 @@ const serviceWorkerScope = withBase('/');
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#243A2E" />
+    <meta name="theme-color" content="#780C18" />
     <meta name="color-scheme" content="light dark" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -46,7 +46,7 @@ const serviceWorkerScope = withBase('/');
         document.documentElement.style.colorScheme = theme;
         document.querySelector('meta[name="theme-color"]')?.setAttribute(
           'content',
-          theme === 'dark' ? '#14211A' : '#243A2E'
+          theme === 'dark' ? '#551B26' : '#780C18'
         );
       })();
     </script>

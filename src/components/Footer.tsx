@@ -47,6 +47,10 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 <Globe2 size={15} aria-hidden="true" />
                 <span>{isPt ? 'Site do grupo' : 'Group website'}</span>
               </a>
+              <a href="https://sites.ufpe.br/seguranca-extensao/" target="_blank" rel="noopener noreferrer">
+                <Globe2 size={15} aria-hidden="true" />
+                <span>{isPt ? 'Projeto de extensão' : 'Extension project'}</span>
+              </a>
               <a href="https://github.com/Romariojveloso-fiteclabs/cmdb-frontend-poc" target="_blank" rel="noopener noreferrer">
                 <Github size={15} aria-hidden="true" />
                 <span>{isPt ? 'Repositório' : 'Repository'}</span>

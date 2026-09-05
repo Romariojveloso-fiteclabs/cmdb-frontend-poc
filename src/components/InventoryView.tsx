@@ -359,7 +359,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
             <col style={{ width: '13%' }} />
           </colgroup>
           <thead>
-            <tr style={{ background: 'var(--brand-panel-background)', color: 'var(--brand-panel-text)' }}>
+            <tr style={{ background: 'var(--table-header-background)', color: 'var(--table-header-text)' }}>
               {[t.family, t.noMoreRansom, t.malwareBazaar, t.samples, t.zoo, t.cmdb].map((heading) => (
                 <th key={heading} scope="col" style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{heading}</th>
               ))}
