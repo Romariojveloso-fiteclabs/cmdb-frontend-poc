@@ -294,6 +294,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
                       <div style={{ fontSize: '12px', color: 'var(--text-color-secondary)', marginTop: '4px', lineHeight: 1.45 }}>
                         {lang === 'pt' ? f.headline.pt : f.headline.en}
                       </div>
+                      {(f.authors || f.alias) && (
+                        <div style={{ fontSize: '11px', color: 'var(--success-color)', marginTop: '4px' }}>{f.authors || f.alias}</div>
+                      )}
                     </div>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '.1em', color: 'var(--info-color)', textAlign: 'right' }}>{f.cat}</span>
                   </div>
