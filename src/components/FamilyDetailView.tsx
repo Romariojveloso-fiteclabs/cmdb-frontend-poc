@@ -352,6 +352,26 @@ export const FamilyDetailView: React.FC<FamilyDetailViewProps> = ({
             </div>
           </div>
 
+          {parsedData && (parsedData.signatures[lang] || parsedData.signatures.pt).length > 0 && (
+            <div style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '10px' }}>
+                {lang === 'pt' ? 'Autoria e revisão' : 'Authorship & review'}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {(parsedData.signatures[lang] || parsedData.signatures.pt).map((sig, index) => (
+                  <div key={`${sig.role}-${index}`}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9.5px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '2px' }}>
+                      {sig.role}
+                    </div>
+                    <div style={{ fontSize: '12.5px', fontWeight: 500 }}>
+                      {sig.name || (lang === 'pt' ? 'Pendente' : 'Pending')}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '10px' }}>
               {t.otherFams}

@@ -339,7 +339,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
             aria-hidden="true"
             style={{ overflowX: 'auto', overflowY: 'hidden', height: '16px', marginBottom: '6px' }}
           >
-            <div style={{ width: '860px', height: '1px' }} />
+            <div style={{ width: '720px', height: '1px' }} />
           </div>
           <div
             ref={tableScrollRef}
@@ -348,28 +348,28 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
             }}
             style={{ border: '1px solid var(--surface-border)', borderRadius: '6px', overflowX: 'auto', background: 'var(--surface-card)' }}
           >
-        <table style={{ width: '100%', minWidth: '860px', tableLayout: 'fixed', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
+        <table style={{ width: '100%', minWidth: '720px', tableLayout: 'fixed', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
           <caption style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>{t.tableCaption}</caption>
           <colgroup>
-            <col style={{ width: '14%' }} />
-            <col style={{ width: '19%' }} />
-            <col style={{ width: '25%' }} />
-            <col style={{ width: '12%' }} />
+            <col style={{ width: '15%' }} />
+            <col style={{ width: '18%' }} />
+            <col style={{ width: '22%' }} />
+            <col style={{ width: '10%' }} />
+            <col style={{ width: '18%' }} />
             <col style={{ width: '17%' }} />
-            <col style={{ width: '13%' }} />
           </colgroup>
           <thead>
             <tr style={{ background: 'var(--table-header-background)', color: 'var(--table-header-text)' }}>
               {[t.family, t.noMoreRansom, t.malwareBazaar, t.samples, t.zoo, t.cmdb].map((heading) => (
-                <th key={heading} scope="col" style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{heading}</th>
+                <th key={heading} scope="col" style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{heading}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {visibleRecords.map((record) => (
               <tr key={`${record.name}-${record.noMoreRansomEntries.join('-')}`} style={{ borderTop: '1px solid var(--surface-border)' }}>
-                <th scope="row" style={{ padding: '12px', verticalAlign: 'top', textAlign: 'left', fontSize: '13.5px', overflowWrap: 'anywhere' }}>{record.name}</th>
-                <td style={{ padding: '12px', verticalAlign: 'top' }}>
+                <th scope="row" style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontSize: '13.5px', overflowWrap: 'anywhere' }}>{record.name}</th>
+                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
                   {record.noMoreRansomEntries.length > 0 ? (
                     <>
                       <StatusBadge label={lang === 'pt' ? 'Listado' : 'Listed'} tone="success" />
@@ -381,9 +381,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
                     <StatusBadge label={t.notListed} tone="secondary" />
                   )}
                 </td>
-                <td style={{ padding: '12px', verticalAlign: 'top' }}>
+                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
                   {record.malwareBazaarStatus === 'confirmed' ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '7px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '7px' }}>
                       <StatusBadge label={lang === 'pt' ? 'Confirmado' : 'Confirmed'} tone="success" />
                       {record.malwareBazaarMatches.map((match) => (
                         <a key={match.url} href={match.url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontFamily: 'var(--font-mono)', fontSize: '11.5px', overflowWrap: 'anywhere' }}>
@@ -399,21 +399,21 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
                     </div>
                   )}
                 </td>
-                <td style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
                   {record.malwareBazaarMatches.length > 0
                     ? record.malwareBazaarMatches.map((match) => (
                       <div key={match.url}>{match.count.toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US')}</div>
                     ))
                     : '—'}
                 </td>
-                <td style={{ padding: '12px', verticalAlign: 'top' }}>
+                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
                   <StatusBadge
                     label={presenceLabel(record.theZooStatus, lang)}
                     tone={record.theZooStatus === 'confirmed' ? 'success' : record.theZooStatus === 'not-confirmed' ? 'warning' : 'secondary'}
                   />
                   {record.theZooEntry && <div style={{ marginTop: '7px', fontFamily: 'var(--font-mono)', fontSize: '11.5px', color: 'var(--text-color-secondary)' }}>{record.theZooEntry}</div>}
                 </td>
-                <td style={{ padding: '12px', verticalAlign: 'top' }}>
+                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
                   {record.documentedFamilyKey ? (
                     <button
                       type="button"
@@ -422,7 +422,13 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
                     >
                       {t.source}
                     </button>
-                  ) : <span style={{ fontSize: '11.5px', color: 'var(--text-color-secondary)' }}>{t.noReport}</span>}
+                  ) : (
+                    <button
+                      type="button"
+                      disabled
+                      style={{ background: 'var(--surface-300)', color: 'var(--surface-300)', border: 'none', borderRadius: '4px', padding: '5px 9px', fontSize: '11.5px', fontWeight: 500, cursor: 'not-allowed', whiteSpace: 'nowrap' }}
+                    />
+                  )}
                 </td>
               </tr>
             ))}

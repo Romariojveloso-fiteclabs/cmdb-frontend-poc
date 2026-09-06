@@ -31,6 +31,8 @@ export interface ParsedFamilyData {
   disp: string;
   alias: string;
   aliases: string;
+  authors: string;
+  signatures: Record<Lang, { role: string; name: string }[]>;
   cat: string;
   headline: Record<Lang, string>;
   plats: string[];
@@ -381,6 +383,32 @@ function extractSummary(markdownText: string, lang: Lang): string {
   );
 }
 
+function extractAuthors(rawText: string): string {
+  const match = rawText.match(/\|\s*(?:Autor(?:es)?\s+respons[aá]vel|Responsible\s+author)\s*\|\s*([^|]+?)\s*\|/i);
+  return match ? match[1].trim() : "";
+}
+
+function extractSignatures(rawText: string): { role: string; name: string }[] {
+  const lines = rawText.split("\n");
+  const headerIndex = lines.findIndex((l) => /^\|\s*(?:Papel|Role)\s*\|\s*Nome\s*\|/i.test(l) || /^\|\s*Role\s*\|\s*Name\s*\|/i.test(l));
+  if (headerIndex === -1) return [];
+
+  const signatures: { role: string; name: string }[] = [];
+  for (let i = headerIndex + 2; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line.trim().startsWith("|")) break;
+
+    const cells = line.split("|").map((c) => c.trim());
+    const role = cells[1];
+    const name = cells[2];
+    if (!role) break;
+
+    signatures.push({ role, name: name || "" });
+  }
+
+  return signatures;
+}
+
 function extractEvidencesFromMarkdown(
   markdownText: string,
   familyKey: string,
@@ -637,6 +665,10 @@ export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
 
     const summaryPt = extractSummary(ptRaw, "pt");
     const summaryEn = extractSummary(enRaw, "en");
+    const authors = extractAuthors(ptRaw) || extractAuthors(enRaw);
+    const ptSignatures = extractSignatures(ptRaw);
+    const enSignatures = extractSignatures(enRaw);
+    const hasRansomwareWord = /ransomware/i.test(disp);
 
     const ptEvidences = extractEvidencesFromMarkdown(ptRaw, key);
     const enEvidences = extractEvidencesFromMarkdown(enRaw, key);
@@ -697,8 +729,13 @@ export function parseAllFamiliesFromMarkdown(): ParsedFamilyData[] {
       key,
       name,
       disp,
-      alias: `${disp} Ransomware`,
+      alias: hasRansomwareWord ? disp : `${disp} Ransomware`,
       aliases: `${disp}, ${disp} Variant`,
+      authors,
+      signatures: {
+        pt: ptSignatures.length ? ptSignatures : enSignatures,
+        en: enSignatures.length ? enSignatures : ptSignatures,
+      },
       cat: "RANSOMWARE",
       headline: {
         pt: summaryPt.slice(0, 110) + "...",

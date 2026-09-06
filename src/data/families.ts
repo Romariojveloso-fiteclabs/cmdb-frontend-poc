@@ -8,6 +8,7 @@ export interface MalwareFamily {
   disp: string;
   alias: string;
   aliases: string;
+  authors: string;
   cat: string;
   headline: { pt: string; en: string };
   plats: string[];
@@ -65,6 +66,7 @@ export const FAMILIES: MalwareFamily[] = PARSED_FAMILIES.map(f => ({
   disp: f.disp,
   alias: f.alias,
   aliases: f.aliases,
+  authors: f.authors,
   cat: f.cat,
   headline: f.headline,
   plats: f.plats,

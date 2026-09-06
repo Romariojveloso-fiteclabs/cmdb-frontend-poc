@@ -240,38 +240,38 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
             </div>
           ) : viewMode === 'table' ? (
             <div style={{ border: '1px solid var(--surface-border)', borderRadius: '6px', overflowX: 'auto', background: 'var(--surface-card)' }}>
-              <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
+              <table style={{ width: '100%', minWidth: '640px', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
                 <thead>
                   <tr style={{ background: 'var(--table-header-background)', color: 'var(--table-header-text)' }}>
-                    <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Família' : 'Family'}</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Relatório' : 'Report'}</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Categoria' : 'Category'}</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Plataformas' : 'Platforms'}</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Status Editorial' : 'Status'}</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>SHA-256</th>
-                    <th style={{ padding: '12px', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Ação' : 'Action'}</th>
+                    <th style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Família' : 'Family'}</th>
+                    <th style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Relatório' : 'Report'}</th>
+                    <th style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Categoria' : 'Category'}</th>
+                    <th style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Plataformas' : 'Platforms'}</th>
+                    <th style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Status Editorial' : 'Status'}</th>
+                    <th style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>SHA-256</th>
+                    <th style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase' }}>{lang === 'pt' ? 'Ação' : 'Action'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {paginatedFamilies.map((f) => (
                     <tr key={f.key} style={{ borderTop: '1px solid var(--surface-border)' }}>
-                      <td style={{ padding: '12px', verticalAlign: 'top' }}>
+                      <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
                         <div style={{ fontSize: '13.5px', fontWeight: 600 }}>{f.disp}</div>
-                        <div style={{ fontSize: '11.5px', color: 'var(--success-color)', marginTop: '3px' }}>{f.alias}</div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--success-color)', marginTop: '3px' }}>{f.authors || f.alias}</div>
                       </td>
-                      <td style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 500 }}>{f.report}</td>
-                      <td style={{ padding: '12px', verticalAlign: 'top', fontSize: '12.5px', color: 'var(--info-color)' }}>{f.cat}</td>
-                      <td style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{f.plats.join(', ')}</td>
-                      <td style={{ padding: '12px', verticalAlign: 'top' }}>{renderBadge('ed', f.ed)}</td>
+                      <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 500 }}>{f.report}</td>
+                      <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontSize: '12.5px', color: 'var(--info-color)' }}>{f.cat}</td>
+                      <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{f.plats.join(', ')}</td>
+                      <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>{renderBadge('ed', f.ed)}</td>
                       <td
                         title={SAMPLE_SHAS[f.key]}
-                        style={{ padding: '12px', verticalAlign: 'top', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-color-secondary)', whiteSpace: 'nowrap' }}
+                        style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-color-secondary)', whiteSpace: 'nowrap' }}
                       >
                         {SAMPLE_SHAS[f.key]
                           ? `${SAMPLE_SHAS[f.key].slice(0, 10)}…${SAMPLE_SHAS[f.key].slice(-6)}`
                           : '—'}
                       </td>
-                      <td style={{ padding: '12px', verticalAlign: 'top', textAlign: 'right' }}>
+                      <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
                         <button
                           onClick={() => onOpenFamily(f.key)}
                           style={{ background: 'var(--primary-color)', color: 'var(--primary-color-text)', border: 'none', borderRadius: '4px', padding: '8px 14px', fontSize: '12.5px', fontWeight: 500, cursor: 'pointer' }}
