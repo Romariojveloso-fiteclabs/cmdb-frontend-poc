@@ -53,7 +53,7 @@ Um mantenedor deve aprovar a admissão **antes** que qualquer binário seja adic
 - Coloque cada amostra em arquivo criptografado usando a convenção de senha do projeto (`infected`). Essa senha convencional protege apenas contra execução acidental; ela não é controle de acesso.
 - Confirme que a criptografia está realmente habilitada; a extensão `.zip`, por si só, não oferece proteção.
 - Use nomes de arquivo consistentes e identifique claramente cada artefato documentado.
-- Adicione relatório com classificação, procedência, SHA-256 do pacote e de cada artefato extraído, observações técnicas, indicadores, medidas de contenção ou correção e referências.
+- Adicione relatório, a partir dos [modelos de documentação](../templates/malware-analysis-report/CMDB-Report-template-pt-BR.md), com classificação, procedência, SHA-256 do pacote e de cada artefato extraído, observações técnicas, indicadores, medidas de contenção ou correção e referências.
 - Mantenha ferramentas de recuperação e utilitários legítimos de terceiros separados das amostras maliciosas e documente a origem e a licença de cada item.
 
 Os mantenedores podem exigir outro mecanismo de transferência, revisão institucional adicional ou a rejeição/remoção de um artefato.

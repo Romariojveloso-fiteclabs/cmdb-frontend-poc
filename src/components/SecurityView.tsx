@@ -23,6 +23,7 @@ export const SecurityView: React.FC<SecurityViewProps> = ({ lang }) => {
 
       {securityDoc && (
         <article
+          id="security"
           className="markdown-body content-panel"
           dangerouslySetInnerHTML={{ __html: securityDoc.htmlContent }}
           style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '32px', marginBottom: '24px' }}
@@ -31,6 +32,7 @@ export const SecurityView: React.FC<SecurityViewProps> = ({ lang }) => {
 
       {disclaimerDoc && (
         <article
+          id="disclaimer"
           className="markdown-body content-panel"
           dangerouslySetInnerHTML={{ __html: disclaimerDoc.htmlContent }}
           style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '32px' }}

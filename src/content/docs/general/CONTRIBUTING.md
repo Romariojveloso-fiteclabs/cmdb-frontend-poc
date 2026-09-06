@@ -53,7 +53,7 @@ A maintainer must approve the intake **before** any binary is added. Approval to
 - Place each sample in an encrypted archive using the project's documented password convention (`infected`). This conventional password is an accidental-execution safeguard, not access control.
 - Verify that encryption is actually enabled; a `.zip` extension alone provides no protection.
 - Use consistent filenames and clearly identify each documented artifact.
-- Add a research report with classification, provenance, SHA-256 for the package and each extracted artifact, technical observations, indicators, containment or remediation information, and references.
+- Add a research report, starting from the [documentation templates](../templates/malware-analysis-report/CMDB-Report-template-EN.md), with classification, provenance, SHA-256 for the package and each extracted artifact, technical observations, indicators, containment or remediation information, and references.
 - Keep recovery tools and benign third-party utilities separate from malicious samples and document their upstream source and license.
 
 Maintainers may require a different transfer mechanism, additional institutional review, or rejection/removal of an artifact.
