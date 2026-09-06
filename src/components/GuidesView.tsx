@@ -48,28 +48,6 @@ export const GuidesView: React.FC<GuidesViewProps> = ({
         </button>
 
         <article className="document-card" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '44px 52px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-            <span style={{ display: 'block', width: '3px', height: '14px', background: 'var(--info-color)' }}></span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.14em', color: 'var(--info-color)' }}>
-              {selectedGuide.id} · {selectedGuide.level}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', gap: '26px', flexWrap: 'wrap', padding: '14px 0', borderTop: '1px solid var(--surface-border)', borderBottom: '1px solid var(--surface-border)', marginBottom: '32px' }}>
-            <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9.5px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '4px' }}>IDENTIFICADOR</div>
-              <div style={{ fontSize: '12.5px', fontWeight: 500 }}>{selectedGuide.id}</div>
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9.5px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '4px' }}>IDIOMA</div>
-              <div style={{ fontSize: '12.5px', fontWeight: 500 }}>{selectedGuide.lang}</div>
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9.5px', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '4px' }}>ATUALIZADO</div>
-              <div style={{ fontSize: '12.5px', fontWeight: 500 }}>{selectedGuide.updated}</div>
-            </div>
-          </div>
-
           <div
             className="markdown-body"
             dangerouslySetInnerHTML={{ __html: selectedGuide.htmlContent }}

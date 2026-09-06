@@ -231,6 +231,72 @@ function resolveImageUrls(
   return text;
 }
 
+const markdownLinkRegistry: Record<string, string> = {};
+
+function registerMarkdownLinkTargets(): void {
+  for (const path in guideFiles) {
+    const id = guideIdFromDocument(path, guideFiles[path]);
+    markdownLinkRegistry[path] = withBase(`/guias/${id.toLowerCase()}/`);
+  }
+
+  for (const path in reportFiles) {
+    const pathParts = path.split("/");
+    const familyKey = pathParts[pathParts.length - 2].toLowerCase();
+    const reportId = reportIdFromDocument(path, reportFiles[path]);
+    markdownLinkRegistry[path] = withBase(
+      `/familias/${familyKey}/relatorios/${reportId.toLowerCase()}/`,
+    );
+  }
+
+  for (const path in templateFiles) {
+    markdownLinkRegistry[path] = withBase("/modelos/");
+  }
+
+  for (const path in generalFiles) {
+    const lowerPath = path.toLowerCase();
+    if (lowerPath.includes("disclaimer")) markdownLinkRegistry[path] = withBase("/seguranca/#disclaimer");
+    else if (lowerPath.includes("security")) markdownLinkRegistry[path] = withBase("/seguranca/#security");
+    else if (lowerPath.includes("contributing")) markdownLinkRegistry[path] = withBase("/contribuir/");
+  }
+}
+
+function resolveMarkdownLink(href: string, documentPath: string): string | null {
+  const cleanHref = href.trim().split(/[?#]/)[0];
+  if (!/\.md$/i.test(cleanHref)) return null;
+  if (/^(?:[a-z]+:|\/\/)/i.test(cleanHref)) return null;
+
+  const documentDirectory = documentPath.slice(0, documentPath.lastIndexOf("/"));
+  const contentPath = normalizeContentPath(`${documentDirectory}/${cleanHref}`);
+  const decodedContentPath = (() => {
+    try {
+      return decodeURIComponent(contentPath);
+    } catch {
+      return contentPath;
+    }
+  })();
+
+  return markdownLinkRegistry[contentPath] || markdownLinkRegistry[decodedContentPath] || null;
+}
+
+function resolveMarkdownLinks(markdownText: string, documentPath: string): string {
+  return markdownText.replace(
+    /(^|[^!])\[([^\]]*)\]\(([^)]+)\)/g,
+    (match, prefix, text, href) => {
+      const resolved = resolveMarkdownLink(href, documentPath);
+      if (resolved) return `${prefix}[${text}](${resolved})`;
+
+      const cleanHref = href.trim().split(/[?#]/)[0];
+      if (/\.md$/i.test(cleanHref) && !/^(?:[a-z]+:|\/\/)/i.test(cleanHref)) {
+        return `${prefix}${text}`;
+      }
+
+      return match;
+    },
+  );
+}
+
+registerMarkdownLinkTargets();
+
 function extractToc(markdownText: string) {
   const headingRegex = /^#{2,3}\s+(.+)$/gm;
   const toc: { id: string; n: string; label: string }[] = [];
@@ -388,6 +454,18 @@ function markdownTitle(rawText: string, fallback: string): string {
   return firstHeading?.replace(/^#\s+/, "").trim() || fallback;
 }
 
+function guideIdFromDocument(path: string, rawText: string): string {
+  const guideIdMatch = rawText.match(/CMDB-GD-\d{3}/i) || path.match(/CMDB-GD-\d{3}/i);
+  if (guideIdMatch) return guideIdMatch[0].toUpperCase();
+
+  const guideFileName = path.split("/").pop()?.replace(/\.md$/i, "") || "guide";
+  return guideFileName
+    .replace(/-(?:pt-br|en)$/i, "")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-|-$/g, "")
+    .toUpperCase();
+}
+
 function reportIdFromDocument(path: string, rawText: string): string {
   const declaredId = rawText.match(/^id:\s*(CMDB-[A-Z0-9-]+)/im)?.[1];
   const numberedId = rawText.match(/\bCMDB-(?:TR|PR)-\d{3}\b/i)?.[0]
@@ -425,7 +503,7 @@ export function parseAllReportsFromMarkdown(): ParsedReportDocument[] {
     const bilingual = !isPt && !isEn ? splitBiLangMarkdown(rawText) : null;
 
     const setLanguageContent = (language: Lang, content: string) => {
-      const resolvedContent = resolveImageUrls(content, path, familyKey);
+      const resolvedContent = resolveMarkdownLinks(resolveImageUrls(content, path, familyKey), path);
       existing.title[language] = markdownTitle(content, reportId);
       existing.htmlContent[language] = renderMarkdown(resolvedContent);
       existing.toc[language] = extractToc(content);
@@ -670,18 +748,9 @@ export function parseAllGuidesFromMarkdown() {
       rawText.split("\n").find((l) => l.startsWith("# ")) || "# Lab Guide";
     const title = firstLine.replace("# ", "").trim();
 
-    const guideIdMatch =
-      rawText.match(/CMDB-GD-\d{3}/i) || path.match(/CMDB-GD-\d{3}/i);
-    const guideFileName = path.split("/").pop()?.replace(/\.md$/i, "") || "guide";
-    const id = guideIdMatch
-      ? guideIdMatch[0].toUpperCase()
-      : guideFileName
-          .replace(/-(?:pt-br|en)$/i, "")
-          .replace(/[^a-z0-9]+/gi, "-")
-          .replace(/^-|-$/g, "")
-          .toUpperCase();
+    const id = guideIdFromDocument(path, rawText);
 
-    const htmlContent = renderMarkdown(resolveImageUrls(rawText, path));
+    const htmlContent = renderMarkdown(resolveMarkdownLinks(resolveImageUrls(rawText, path), path));
 
     const item = {
       id,
@@ -753,39 +822,14 @@ export function parseGeneralDocFromMarkdown(
   docType: "disclaimer" | "security" | "contributing",
   lang: Lang,
 ) {
-  const targetLang = lang === "pt" ? "pt-br" : "en";
+  const matchesLang = (lowerPath: string) =>
+    (lang === "pt" && lowerPath.includes("pt-br")) || (lang === "en" && !lowerPath.includes("pt-br"));
 
   for (const path in generalFiles) {
     const lowerPath = path.toLowerCase();
-
-    if (docType === "disclaimer" && lowerPath.includes("disclaimer")) {
-      if (
-        (lang === "pt" && lowerPath.includes("pt-br")) ||
-        (lang === "en" && !lowerPath.includes("pt-br"))
-      ) {
-        const rawText = generalFiles[path];
-        return { rawText, htmlContent: renderMarkdown(rawText) };
-      }
-    }
-
-    if (docType === "security" && lowerPath.includes("security")) {
-      if (
-        (lang === "pt" && lowerPath.includes("pt-br")) ||
-        (lang === "en" && !lowerPath.includes("pt-br"))
-      ) {
-        const rawText = generalFiles[path];
-        return { rawText, htmlContent: renderMarkdown(rawText) };
-      }
-    }
-
-    if (docType === "contributing" && lowerPath.includes("contributing")) {
-      if (
-        (lang === "pt" && lowerPath.includes("pt-br")) ||
-        (lang === "en" && !lowerPath.includes("pt-br"))
-      ) {
-        const rawText = generalFiles[path];
-        return { rawText, htmlContent: renderMarkdown(rawText) };
-      }
+    if (lowerPath.includes(docType) && matchesLang(lowerPath)) {
+      const rawText = generalFiles[path];
+      return { rawText, htmlContent: renderMarkdown(resolveMarkdownLinks(rawText, path)) };
     }
   }
 
@@ -793,7 +837,7 @@ export function parseGeneralDocFromMarkdown(
     const lowerPath = path.toLowerCase();
     if (lowerPath.includes(docType)) {
       const rawText = generalFiles[path];
-      return { rawText, htmlContent: renderMarkdown(rawText) };
+      return { rawText, htmlContent: renderMarkdown(resolveMarkdownLinks(rawText, path)) };
     }
   }
 
