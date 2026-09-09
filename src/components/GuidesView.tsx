@@ -3,6 +3,7 @@ import { BookOpen, ArrowLeft } from 'lucide-react';
 import { parseAllGuidesFromMarkdown } from '../data/markdownLoader';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
+import { PageHeader } from './PageHeader';
 
 interface GuidesViewProps {
   lang: Lang;
@@ -60,12 +61,7 @@ export const GuidesView: React.FC<GuidesViewProps> = ({
 
   return (
     <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
-      <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
-        {t.guidesPageTitle}
-      </h1>
-      <p className="page-intro">
-        {t.guidesPageSub}
-      </p>
+      <PageHeader title={t.guidesPageTitle} intro={t.guidesPageSub} />
 
       <div className="guides-grid card-grid card-grid--2">
         {guidesList.map((g) => (

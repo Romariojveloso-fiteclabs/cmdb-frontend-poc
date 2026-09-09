@@ -3,6 +3,7 @@ import { Download, Info, Check } from 'lucide-react';
 import { DOC_TEMPLATES, DocTemplate } from '../data/templates';
 import { Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
+import { PageHeader } from './PageHeader';
 
 interface TemplatesViewProps {
   lang: Lang;
@@ -25,12 +26,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
 
   return (
     <section className="page-shell" style={{ maxWidth: '1000px', margin: '0 auto', padding: '36px 28px 72px' }}>
-      <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
-        {t.tplTitle}
-      </h1>
-      <p className="page-intro">
-        {t.tplSub}
-      </p>
+      <PageHeader title={t.tplTitle} intro={t.tplSub} />
 
       <div style={{ background: 'var(--info-soft)', border: '1px solid var(--info-color)', color: 'var(--info-600)', borderRadius: '6px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
         <Info size={20} style={{ flexShrink: 0 }} />
