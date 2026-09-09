@@ -1,11 +1,18 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ExternalLink, Search } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { Lang } from '../data/families';
 import {
   INVENTORY_RECORDS,
   INVENTORY_SOURCE_REGISTRATION_COUNT,
   InventoryPresence
 } from '../data/inventory';
+import { PageHeader } from './PageHeader';
+import { SearchField } from './SearchField';
+import { FilterPanel } from './FilterPanel';
+import { FilterGroup } from './FilterGroup';
+import { PaginationBar } from './PaginationBar';
+import { readParam, readFilterParam, readPageParam, writeUrlParams } from '../utils/urlParams';
+import { usePagination } from '../hooks/usePagination';
 
 interface InventoryViewProps {
   lang: Lang;
@@ -15,25 +22,6 @@ interface InventoryViewProps {
 type MatchFilter = 'all' | 'confirmed' | 'not-confirmed';
 type PresenceFilter = 'all' | 'confirmed' | 'not-confirmed' | 'absent';
 type CmdbFilter = 'all' | 'documented' | 'not-documented';
-
-function inventoryParam(name: string): string | null {
-  if (typeof window === 'undefined') return null;
-  return new URLSearchParams(window.location.search).get(name);
-}
-
-function inventoryFilterParam<T extends string>(
-  name: string,
-  allowedValues: readonly T[],
-  fallback: T,
-): T {
-  const value = inventoryParam(name) as T | null;
-  return value && allowedValues.includes(value) ? value : fallback;
-}
-
-function inventoryPageParam(): number {
-  const page = Number(inventoryParam('pagina') || 1);
-  return Number.isInteger(page) && page > 0 ? page - 1 : 0;
-}
 
 const copy = {
   pt: {
@@ -128,20 +116,19 @@ function presenceLabel(status: InventoryPresence, lang: Lang) {
 
 export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily }) => {
   const t = copy[lang];
-  const [query, setQuery] = useState(() => inventoryParam('busca') || '');
+  const [query, setQuery] = useState(() => readParam('busca') || '');
   const [noMoreRansomFilter, setNoMoreRansomFilter] = useState<PresenceFilter>(() =>
-    inventoryFilterParam('nomoreransom', ['all', 'confirmed', 'absent'] as const, 'all'),
+    readFilterParam<PresenceFilter>('nomoreransom', ['all', 'confirmed', 'absent'] as const, 'all'),
   );
   const [matchFilter, setMatchFilter] = useState<MatchFilter>(() =>
-    inventoryFilterParam('malwarebazaar', ['all', 'confirmed', 'not-confirmed'] as const, 'all'),
+    readFilterParam<MatchFilter>('malwarebazaar', ['all', 'confirmed', 'not-confirmed'] as const, 'all'),
   );
   const [theZooFilter, setTheZooFilter] = useState<PresenceFilter>(() =>
-    inventoryFilterParam('thezoo', ['all', 'confirmed', 'not-confirmed', 'absent'] as const, 'all'),
+    readFilterParam<PresenceFilter>('thezoo', ['all', 'confirmed', 'not-confirmed', 'absent'] as const, 'all'),
   );
   const [cmdbFilter, setCmdbFilter] = useState<CmdbFilter>(() =>
-    inventoryFilterParam('cmdb', ['all', 'documented', 'not-documented'] as const, 'all'),
+    readFilterParam<CmdbFilter>('cmdb', ['all', 'documented', 'not-documented'] as const, 'all'),
   );
-  const [page, setPage] = useState(inventoryPageParam);
   const topScrollRef = useRef<HTMLDivElement>(null);
   const tableScrollRef = useRef<HTMLDivElement>(null);
   const pageSize = 6;
@@ -169,22 +156,18 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
     });
   }, [cmdbFilter, lang, matchFilter, noMoreRansomFilter, query, theZooFilter]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredRecords.length / pageSize));
-  const currentPage = Math.min(page, totalPages - 1);
+  const { page: currentPage, setPage, totalPages } = usePagination(filteredRecords.length, pageSize, readPageParam('pagina'));
   const visibleRecords = filteredRecords.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (query.trim()) params.set('busca', query.trim());
-    if (noMoreRansomFilter !== 'all') params.set('nomoreransom', noMoreRansomFilter);
-    if (matchFilter !== 'all') params.set('malwarebazaar', matchFilter);
-    if (theZooFilter !== 'all') params.set('thezoo', theZooFilter);
-    if (cmdbFilter !== 'all') params.set('cmdb', cmdbFilter);
-    if (currentPage > 0) params.set('pagina', String(currentPage + 1));
-
-    const queryString = params.toString();
-    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`;
-    window.history.replaceState(window.history.state, '', nextUrl);
+    writeUrlParams({
+      busca: query.trim() || undefined,
+      nomoreransom: noMoreRansomFilter !== 'all' ? noMoreRansomFilter : undefined,
+      malwarebazaar: matchFilter !== 'all' ? matchFilter : undefined,
+      thezoo: theZooFilter !== 'all' ? theZooFilter : undefined,
+      cmdb: cmdbFilter !== 'all' ? cmdbFilter : undefined,
+      pagina: currentPage > 0 ? String(currentPage + 1) : undefined
+    });
   }, [cmdbFilter, currentPage, matchFilter, noMoreRansomFilter, query, theZooFilter]);
 
   const clearAllFilters = () => {
@@ -196,123 +179,64 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
     setPage(0);
   };
 
-  const filterChipStyle = (active: boolean) => ({
-    borderRadius: '99px',
-    padding: '4px 10px',
-    fontFamily: 'var(--font-sans)',
-    fontSize: '11.5px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    border: `1px solid ${active ? 'var(--primary-color)' : 'var(--input-border)'}`,
-    background: active ? 'var(--primary-color)' : 'transparent',
-    color: active ? 'var(--primary-color-text)' : 'var(--text-color-secondary)'
-  });
+  const noMoreRansomOptions = [
+    { value: 'all', label: t.all },
+    { value: 'confirmed', label: t.listed },
+    { value: 'absent', label: t.notListed }
+  ];
+  const malwareBazaarOptions = [
+    { value: 'all', label: t.all },
+    { value: 'confirmed', label: t.confirmed },
+    { value: 'not-confirmed', label: t.notConfirmed }
+  ];
+  const theZooOptions = [
+    { value: 'all', label: t.all },
+    { value: 'confirmed', label: t.confirmed },
+    { value: 'not-confirmed', label: t.notConfirmed },
+    { value: 'absent', label: t.notListed }
+  ];
+  const cmdbOptions = [
+    { value: 'all', label: t.all },
+    { value: 'documented', label: t.documented },
+    { value: 'not-documented', label: t.notDocumented }
+  ];
 
   const renderPagination = (position: 'top' | 'bottom') => totalPages > 1 && (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', margin: position === 'top' ? '0 0 10px' : '18px 0 0' }}>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11.5px', color: 'var(--text-color-secondary)' }}>
-        {t.page} {currentPage + 1} {t.of} {totalPages}
-      </span>
-      <div style={{ display: 'flex', gap: '6px' }}>
-        <button
-          disabled={currentPage === 0}
-          onClick={() => setPage((value) => Math.max(0, value - 1))}
-          style={{ background: currentPage === 0 ? 'var(--surface-100)' : 'var(--surface-card)', border: '1px solid var(--input-border)', borderRadius: '4px', padding: '6px 12px', fontSize: '12px', cursor: currentPage === 0 ? 'not-allowed' : 'pointer' }}
-        >
-          {t.previous}
-        </button>
-        <button
-          disabled={currentPage >= totalPages - 1}
-          onClick={() => setPage((value) => Math.min(totalPages - 1, value + 1))}
-          style={{ background: currentPage >= totalPages - 1 ? 'var(--surface-100)' : 'var(--surface-card)', border: '1px solid var(--input-border)', borderRadius: '4px', padding: '6px 12px', fontSize: '12px', cursor: currentPage >= totalPages - 1 ? 'not-allowed' : 'pointer' }}
-        >
-          {t.next}
-        </button>
-      </div>
-    </div>
+    <PaginationBar
+      page={currentPage}
+      totalPages={totalPages}
+      onPrev={() => setPage((value) => Math.max(0, value - 1))}
+      onNext={() => setPage((value) => Math.min(totalPages - 1, value + 1))}
+      info={`${t.page} ${currentPage + 1} ${t.of} ${totalPages}`}
+      previousLabel={t.previous}
+      nextLabel={t.next}
+      margin={position === 'top' ? '0 0 10px' : '18px 0 0'}
+    />
   );
 
   return (
     <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
-      <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>{t.title}</h1>
-      <p className="page-intro">
-        {t.subtitle}
-      </p>
+      <PageHeader title={t.title} intro={t.subtitle} />
 
       <div className="responsive-split" style={{ display: 'grid', gridTemplateColumns: '272px minmax(0, 1fr)', gap: '24px', alignItems: 'start' }}>
-        <aside className="filters-panel" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px', position: 'sticky', top: '88px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ position: 'relative' }}>
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => { setQuery(event.target.value); setPage(0); }}
-              placeholder={t.search}
-              style={{
-                width: '100%',
-                padding: '9px 12px 9px 34px',
-                borderRadius: '4px',
-                border: '1px solid var(--input-border)',
-                background: 'var(--surface-ground)',
-                fontFamily: 'var(--font-sans)',
-                fontSize: '13px',
-                color: 'var(--text-color)'
-              }}
-            />
-            <Search size={16} color="var(--secondary-color)" style={{ position: 'absolute', left: '10px', top: '10px' }} />
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '9px' }}>
-              {t.noMoreRansomStatus}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={() => { setNoMoreRansomFilter('all'); setPage(0); }} style={filterChipStyle(noMoreRansomFilter === 'all')}>{t.all}</button>
-              <button onClick={() => { setNoMoreRansomFilter('confirmed'); setPage(0); }} style={filterChipStyle(noMoreRansomFilter === 'confirmed')}>{t.listed}</button>
-              <button onClick={() => { setNoMoreRansomFilter('absent'); setPage(0); }} style={filterChipStyle(noMoreRansomFilter === 'absent')}>{t.notListed}</button>
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '9px' }}>
-              {t.matchStatus}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={() => { setMatchFilter('all'); setPage(0); }} style={filterChipStyle(matchFilter === 'all')}>{t.all}</button>
-              <button onClick={() => { setMatchFilter('confirmed'); setPage(0); }} style={filterChipStyle(matchFilter === 'confirmed')}>{t.confirmed}</button>
-              <button onClick={() => { setMatchFilter('not-confirmed'); setPage(0); }} style={filterChipStyle(matchFilter === 'not-confirmed')}>{t.notConfirmed}</button>
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '9px' }}>
-              {t.theZooStatus}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={() => { setTheZooFilter('all'); setPage(0); }} style={filterChipStyle(theZooFilter === 'all')}>{t.all}</button>
-              <button onClick={() => { setTheZooFilter('confirmed'); setPage(0); }} style={filterChipStyle(theZooFilter === 'confirmed')}>{t.confirmed}</button>
-              <button onClick={() => { setTheZooFilter('not-confirmed'); setPage(0); }} style={filterChipStyle(theZooFilter === 'not-confirmed')}>{t.notConfirmed}</button>
-              <button onClick={() => { setTheZooFilter('absent'); setPage(0); }} style={filterChipStyle(theZooFilter === 'absent')}>{t.notListed}</button>
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '9px' }}>
-              {t.cmdbStatus}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={() => { setCmdbFilter('all'); setPage(0); }} style={filterChipStyle(cmdbFilter === 'all')}>{t.all}</button>
-              <button onClick={() => { setCmdbFilter('documented'); setPage(0); }} style={filterChipStyle(cmdbFilter === 'documented')}>{t.documented}</button>
-              <button onClick={() => { setCmdbFilter('not-documented'); setPage(0); }} style={filterChipStyle(cmdbFilter === 'not-documented')}>{t.notDocumented}</button>
-            </div>
-          </div>
-
+        <FilterPanel>
+          <SearchField
+            type="search"
+            value={query}
+            onChange={(value) => { setQuery(value); setPage(0); }}
+            placeholder={t.search}
+          />
+          <FilterGroup label={t.noMoreRansomStatus} options={noMoreRansomOptions} active={noMoreRansomFilter} onChange={(value) => { setNoMoreRansomFilter(value as PresenceFilter); setPage(0); }} />
+          <FilterGroup label={t.matchStatus} options={malwareBazaarOptions} active={matchFilter} onChange={(value) => { setMatchFilter(value as MatchFilter); setPage(0); }} />
+          <FilterGroup label={t.theZooStatus} options={theZooOptions} active={theZooFilter} onChange={(value) => { setTheZooFilter(value as PresenceFilter); setPage(0); }} />
+          <FilterGroup label={t.cmdbStatus} options={cmdbOptions} active={cmdbFilter} onChange={(value) => { setCmdbFilter(value as CmdbFilter); setPage(0); }} />
           <button
             onClick={clearAllFilters}
             style={{ background: 'none', border: 'none', padding: 0, color: 'var(--info-600)', fontFamily: 'var(--font-sans)', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
           >
             {t.clearFilters}
           </button>
-        </aside>
+        </FilterPanel>
 
         <div style={{ minWidth: 0 }}>
           <div className="results-toolbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '14px' }}>

@@ -1,10 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Search } from 'lucide-react';
 import { FAMILIES, DIMENSIONS, SAMPLE_SHAS, Lang } from '../data/families';
 import { TRANSLATIONS } from '../data/i18n';
 import { ResultsBrowser } from './ResultsBrowser';
 import { FamilyCard } from './FamilyCard';
 import { DimensionBadge } from './DimensionBadge';
+import { PageHeader } from './PageHeader';
+import { SearchField } from './SearchField';
+import { FilterPanel } from './FilterPanel';
+import { FilterGroup } from './FilterGroup';
+import { readParam, readFilterParam, readPageParam, writeUrlParams } from '../utils/urlParams';
+import { usePagination } from '../hooks/usePagination';
 
 interface CatalogViewProps {
   lang: Lang;
@@ -12,30 +17,14 @@ interface CatalogViewProps {
   onOpenFamily: (key: string) => void;
 }
 
-function catalogParam(name: string): string | null {
-  if (typeof window === 'undefined') return null;
-  return new URLSearchParams(window.location.search).get(name);
-}
-
-function catalogFilterParam(name: string, allowedValues: string[]): string {
-  const value = catalogParam(name);
-  return value && allowedValues.includes(value) ? value : 'all';
-}
-
-function catalogPageParam(): number {
-  const page = Number(catalogParam('pagina') || 1);
-  return Number.isInteger(page) && page > 0 ? page - 1 : 0;
-}
-
 export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '', onOpenFamily }) => {
   const t = TRANSLATIONS[lang];
 
-  const [searchQuery, setSearchQuery] = useState(initialQuery || catalogParam('busca') || '');
-  const [platFilter, setPlatFilter] = useState<string>(() => catalogFilterParam('plataforma', ['Windows', 'Linux']));
-  const [edFilter, setEdFilter] = useState<string>(() => catalogFilterParam('editorial', Object.keys(DIMENSIONS.ed)));
-  const [evFilter, setEvFilter] = useState<string>(() => catalogFilterParam('evidencia', Object.keys(DIMENSIONS.ev)));
-  const [viewMode, setViewMode] = useState<'cards' | 'table'>(() => catalogParam('visualizacao') === 'tabela' ? 'table' : 'cards');
-  const [page, setPage] = useState(catalogPageParam);
+  const [searchQuery, setSearchQuery] = useState(initialQuery || readParam('busca') || '');
+  const [platFilter, setPlatFilter] = useState<string>(() => readFilterParam('plataforma', ['Windows', 'Linux'], 'all'));
+  const [edFilter, setEdFilter] = useState<string>(() => readFilterParam('editorial', Object.keys(DIMENSIONS.ed), 'all'));
+  const [evFilter, setEvFilter] = useState<string>(() => readFilterParam('evidencia', Object.keys(DIMENSIONS.ev), 'all'));
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>(() => readParam('visualizacao') === 'tabela' ? 'table' : 'cards');
 
   const pageSize = 6;
 
@@ -52,21 +41,17 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
     });
   }, [searchQuery, platFilter, edFilter, evFilter]);
 
-  const totalPages = Math.ceil(filteredFamilies.length / pageSize) || 1;
-  const currentPage = Math.min(page, totalPages - 1);
+  const { page: currentPage, setPage } = usePagination(filteredFamilies.length, pageSize, readPageParam('pagina'));
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (searchQuery.trim()) params.set('busca', searchQuery.trim());
-    if (platFilter !== 'all') params.set('plataforma', platFilter);
-    if (edFilter !== 'all') params.set('editorial', edFilter);
-    if (evFilter !== 'all') params.set('evidencia', evFilter);
-    if (viewMode === 'table') params.set('visualizacao', 'tabela');
-    if (currentPage > 0) params.set('pagina', String(currentPage + 1));
-
-    const queryString = params.toString();
-    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`;
-    window.history.replaceState(window.history.state, '', nextUrl);
+    writeUrlParams({
+      busca: searchQuery.trim() || undefined,
+      plataforma: platFilter !== 'all' ? platFilter : undefined,
+      editorial: edFilter !== 'all' ? edFilter : undefined,
+      evidencia: evFilter !== 'all' ? evFilter : undefined,
+      visualizacao: viewMode === 'table' ? 'tabela' : undefined,
+      pagina: currentPage > 0 ? String(currentPage + 1) : undefined
+    });
   }, [currentPage, edFilter, evFilter, platFilter, searchQuery, viewMode]);
 
   const clearAllFilters = () => {
@@ -77,17 +62,26 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
     setPage(0);
   };
 
-  const filterChipStyle = (active: boolean) => ({
-    borderRadius: '99px',
-    padding: '4px 10px',
-    fontFamily: 'var(--font-sans)',
-    fontSize: '11.5px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    border: `1px solid ${active ? 'var(--primary-color)' : 'var(--input-border)'}`,
-    background: active ? 'var(--primary-color)' : 'transparent',
-    color: active ? 'var(--primary-color-text)' : 'var(--text-color-secondary)'
-  });
+  const allLabel = lang === 'pt' ? 'Todas' : 'All';
+  const platformOptions = [
+    { value: 'all', label: allLabel },
+    { value: 'Windows', label: 'Windows' },
+    { value: 'Linux', label: 'Linux' }
+  ];
+  const editorialOptions = [
+    { value: 'all', label: lang === 'pt' ? 'Todos' : 'All' },
+    ...Object.keys(DIMENSIONS.ed).map((key) => ({
+      value: key,
+      label: lang === 'pt' ? DIMENSIONS.ed[key].pt : DIMENSIONS.ed[key].en
+    }))
+  ];
+  const evidenceOptions = [
+    { value: 'all', label: allLabel },
+    ...Object.keys(DIMENSIONS.ev).map((key) => ({
+      value: key,
+      label: lang === 'pt' ? DIMENSIONS.ev[key].pt : DIMENSIONS.ev[key].en
+    }))
+  ];
 
   const tableColumns = [
     lang === 'pt' ? 'Família' : 'Family',
@@ -101,91 +95,40 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ lang, initialQuery = '
 
   return (
     <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
-      <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
-        {t.catalogTitle}
-      </h1>
-      <p className="page-intro">
-        {t.catalogSub}
-      </p>
+      <PageHeader title={t.catalogTitle} intro={t.catalogSub} />
 
       <div className="responsive-split" style={{ display: 'grid', gridTemplateColumns: '272px minmax(0, 1fr)', gap: '24px', alignItems: 'start' }}>
-        <aside className="filters-panel" style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '18px', position: 'sticky', top: '88px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ position: 'relative' }}>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setPage(0); }}
-              placeholder={t.searchShort}
-              style={{
-                width: '100%',
-                padding: '9px 12px 9px 34px',
-                borderRadius: '4px',
-                border: '1px solid var(--input-border)',
-                background: 'var(--surface-ground)',
-                fontFamily: 'var(--font-sans)',
-                fontSize: '13px',
-                color: 'var(--text-color)'
-              }}
-            />
-            <Search size={16} color="var(--secondary-color)" style={{ position: 'absolute', left: '10px', top: '10px' }} />
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '9px' }}>
-              {lang === 'pt' ? 'PLATAFORMA' : 'PLATFORM'}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={() => { setPlatFilter('all'); setPage(0); }} style={filterChipStyle(platFilter === 'all')}>
-                {lang === 'pt' ? 'Todas' : 'All'}
-              </button>
-              <button onClick={() => { setPlatFilter('Windows'); setPage(0); }} style={filterChipStyle(platFilter === 'Windows')}>
-                Windows
-              </button>
-              <button onClick={() => { setPlatFilter('Linux'); setPage(0); }} style={filterChipStyle(platFilter === 'Linux')}>
-                Linux
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '9px' }}>
-              {lang === 'pt' ? 'STATUS EDITORIAL' : 'EDITORIAL STATUS'}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={() => { setEdFilter('all'); setPage(0); }} style={filterChipStyle(edFilter === 'all')}>
-                {lang === 'pt' ? 'Todos' : 'All'}
-              </button>
-              {Object.keys(DIMENSIONS.ed).map((k) => (
-                <button key={k} onClick={() => { setEdFilter(k); setPage(0); }} style={filterChipStyle(edFilter === k)}>
-                  {lang === 'pt' ? DIMENSIONS.ed[k].pt : DIMENSIONS.ed[k].en}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--text-color-secondary)', marginBottom: '9px' }}>
-              {lang === 'pt' ? 'EVIDÊNCIA' : 'EVIDENCE'}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <button onClick={() => { setEvFilter('all'); setPage(0); }} style={filterChipStyle(evFilter === 'all')}>
-                {lang === 'pt' ? 'Todas' : 'All'}
-              </button>
-              {Object.keys(DIMENSIONS.ev).map((k) => (
-                <button key={k} onClick={() => { setEvFilter(k); setPage(0); }} style={filterChipStyle(evFilter === k)}>
-                  {lang === 'pt' ? DIMENSIONS.ev[k].pt : DIMENSIONS.ev[k].en}
-                </button>
-              ))}
-            </div>
-          </div>
-
+        <FilterPanel>
+          <SearchField
+            value={searchQuery}
+            onChange={(value) => { setSearchQuery(value); setPage(0); }}
+            placeholder={t.searchShort}
+          />
+          <FilterGroup
+            label={lang === 'pt' ? 'PLATAFORMA' : 'PLATFORM'}
+            options={platformOptions}
+            active={platFilter}
+            onChange={(value) => { setPlatFilter(value); setPage(0); }}
+          />
+          <FilterGroup
+            label={lang === 'pt' ? 'STATUS EDITORIAL' : 'EDITORIAL STATUS'}
+            options={editorialOptions}
+            active={edFilter}
+            onChange={(value) => { setEdFilter(value); setPage(0); }}
+          />
+          <FilterGroup
+            label={lang === 'pt' ? 'EVIDÊNCIA' : 'EVIDENCE'}
+            options={evidenceOptions}
+            active={evFilter}
+            onChange={(value) => { setEvFilter(value); setPage(0); }}
+          />
           <button
             onClick={clearAllFilters}
             style={{ background: 'none', border: 'none', padding: 0, color: 'var(--info-600)', fontFamily: 'var(--font-sans)', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', textAlign: 'left' }}
           >
             {t.clearFilters}
           </button>
-        </aside>
+        </FilterPanel>
 
         <ResultsBrowser
           items={filteredFamilies}

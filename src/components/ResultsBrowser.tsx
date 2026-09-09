@@ -1,6 +1,8 @@
 import React from 'react';
+import { PaginationBar } from './PaginationBar';
+import { ViewToggle, ResultViewMode } from './ViewToggle';
 
-export type ResultViewMode = 'cards' | 'table';
+export type { ResultViewMode } from './ViewToggle';
 
 export interface ResultsBrowserProps<Item> {
   items: readonly Item[];
@@ -54,7 +56,7 @@ export function ResultsBrowser<Item>(props: ResultsBrowserProps<Item>) {
     tableMinWidth,
     tableRoominess = 'standard',
     tableCaption,
-    paginationLabels,
+    paginationLabels
   } = props;
 
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
@@ -81,41 +83,15 @@ export function ResultsBrowser<Item>(props: ResultsBrowserProps<Item>) {
           toolbarRight
         ) : showToggle ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            {viewToggleNote && (
+            {viewToggleNote ? (
               <span style={{ fontSize: '12px', color: 'var(--text-color-secondary)' }}>{viewToggleNote}</span>
-            )}
-            <div style={{ display: 'flex', border: '1px solid var(--input-border)', borderRadius: '4px', overflow: 'hidden' }}>
-              <button
-                type="button"
-                onClick={() => onViewModeChange?.('cards')}
-                style={{
-                  background: viewMode === 'cards' ? 'var(--primary-color)' : 'transparent',
-                  color: viewMode === 'cards' ? 'var(--primary-color-text)' : 'var(--text-color-secondary)',
-                  border: 'none',
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  cursor: 'pointer'
-                }}
-              >
-                {viewToggleLabels?.cards ?? 'Cards'}
-              </button>
-              <button
-                type="button"
-                onClick={() => onViewModeChange?.('table')}
-                style={{
-                  background: viewMode === 'table' ? 'var(--primary-color)' : 'transparent',
-                  color: viewMode === 'table' ? 'var(--primary-color-text)' : 'var(--text-color-secondary)',
-                  border: 'none',
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  cursor: 'pointer'
-                }}
-              >
-                {viewToggleLabels?.table ?? 'Table'}
-              </button>
-            </div>
+            ) : null}
+            <ViewToggle
+              viewMode={viewMode ?? 'cards'}
+              onChange={onViewModeChange!}
+              cardsLabel={viewToggleLabels?.cards ?? 'Cards'}
+              tableLabel={viewToggleLabels?.table ?? 'Table'}
+            />
           </div>
         ) : null}
       </div>
@@ -125,11 +101,11 @@ export function ResultsBrowser<Item>(props: ResultsBrowserProps<Item>) {
       ) : isTable ? (
         <div className="data-table-shell">
           <table className={`data-table${roomyClass}`} style={{ minWidth: tableMinWidth }}>
-            {tableCaption && (
+            {tableCaption ? (
               <caption style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
                 {tableCaption}
               </caption>
-            )}
+            ) : null}
             <thead>
               <tr>
                 {tableColumns.map((heading) => (
@@ -149,43 +125,15 @@ export function ResultsBrowser<Item>(props: ResultsBrowserProps<Item>) {
       )}
 
       {totalPages > 1 && (
-        <div className="results-pagination" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginTop: '18px' }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11.5px', color: 'var(--text-color-secondary)' }}>
-            {paginationLabels ? paginationLabels.pageInfo(safePage + 1, totalPages) : `${safePage + 1} / ${totalPages}`}
-          </span>
-          <div style={{ display: 'flex', gap: '6px' }}>
-            <button
-              type="button"
-              disabled={safePage === 0}
-              onClick={() => onPageChange(Math.max(0, safePage - 1))}
-              style={{
-                background: safePage === 0 ? 'var(--surface-100)' : 'var(--surface-card)',
-                border: '1px solid var(--input-border)',
-                borderRadius: '4px',
-                padding: '6px 12px',
-                fontSize: '12px',
-                cursor: safePage === 0 ? 'not-allowed' : 'pointer'
-              }}
-            >
-              {paginationLabels?.previous ?? 'Previous'}
-            </button>
-            <button
-              type="button"
-              disabled={safePage >= totalPages - 1}
-              onClick={() => onPageChange(Math.min(totalPages - 1, safePage + 1))}
-              style={{
-                background: safePage >= totalPages - 1 ? 'var(--surface-100)' : 'var(--surface-card)',
-                border: '1px solid var(--input-border)',
-                borderRadius: '4px',
-                padding: '6px 12px',
-                fontSize: '12px',
-                cursor: safePage >= totalPages - 1 ? 'not-allowed' : 'pointer'
-              }}
-            >
-              {paginationLabels?.next ?? 'Next'}
-            </button>
-          </div>
-        </div>
+        <PaginationBar
+          page={safePage}
+          totalPages={totalPages}
+          onPrev={() => onPageChange(Math.max(0, safePage - 1))}
+          onNext={() => onPageChange(Math.min(totalPages - 1, safePage + 1))}
+          info={paginationLabels ? paginationLabels.pageInfo(safePage + 1, totalPages) : `${safePage + 1} / ${totalPages}`}
+          previousLabel={paginationLabels?.previous ?? 'Previous'}
+          nextLabel={paginationLabels?.next ?? 'Next'}
+        />
       )}
     </div>
   );
