@@ -38,7 +38,7 @@ function inventoryPageParam(): number {
 const copy = {
   pt: {
     title: 'Inventário de famílias de malware',
-    subtitle: 'Este levantamento reúne informações de fontes confiáveis para incentivar a contribuição contínua de novos entusiastas da área, facilitar a identificação das documentações já publicadas no CMDB e evidenciar o que ainda precisa ser investigado.',
+    subtitle: 'Comparação entre fontes confiáveis para indicar o que já está documentado no CMDB e o que ainda precisa ser investigado.',
     search: 'Buscar família, alias ou registro',
     results: 'resultados encontrados',
     represented: 'registros representados',
@@ -72,7 +72,7 @@ const copy = {
   },
   en: {
     title: 'Malware family inventory',
-    subtitle: 'This survey brings together information from trusted sources to encourage continued contributions from newcomers to the field, make published CMDB documentation easier to identify, and highlight what still needs to be investigated.',
+    subtitle: 'A cross-source comparison indicating what is already documented in the CMDB and what still needs investigation.',
     search: 'Search family, alias, or record',
     results: 'results found',
     represented: 'source records represented',
@@ -144,7 +144,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
   const [page, setPage] = useState(inventoryPageParam);
   const topScrollRef = useRef<HTMLDivElement>(null);
   const tableScrollRef = useRef<HTMLDivElement>(null);
-  const pageSize = 20;
+  const pageSize = 6;
 
   const filteredRecords = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase(lang === 'pt' ? 'pt-BR' : 'en');
@@ -235,7 +235,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
   return (
     <section className="page-shell" style={{ maxWidth: '1180px', margin: '0 auto', padding: '36px 28px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>{t.title}</h1>
-      <p style={{ fontSize: '14.5px', color: 'var(--text-color-secondary)', margin: '0 0 24px', maxWidth: '70ch', lineHeight: 1.6 }}>
+      <p className="page-intro">
         {t.subtitle}
       </p>
 
@@ -346,9 +346,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
             onScroll={(event) => {
               if (topScrollRef.current) topScrollRef.current.scrollLeft = event.currentTarget.scrollLeft;
             }}
-            style={{ border: '1px solid var(--surface-border)', borderRadius: '6px', overflowX: 'auto', background: 'var(--surface-card)' }}
+            className="data-table-shell"
           >
-        <table style={{ width: '100%', minWidth: '720px', tableLayout: 'fixed', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
+        <table className="data-table data-table--comfortable" style={{ minWidth: '720px', tableLayout: 'fixed' }}>
           <caption style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>{t.tableCaption}</caption>
           <colgroup>
             <col style={{ width: '15%' }} />
@@ -361,15 +361,15 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
           <thead>
             <tr style={{ background: 'var(--table-header-background)', color: 'var(--table-header-text)' }}>
               {[t.family, t.noMoreRansom, t.malwareBazaar, t.samples, t.zoo, t.cmdb].map((heading) => (
-                <th key={heading} scope="col" style={{ padding: '10px 8px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{heading}</th>
+                <th key={heading} scope="col">{heading}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {visibleRecords.map((record) => (
               <tr key={`${record.name}-${record.noMoreRansomEntries.join('-')}`} style={{ borderTop: '1px solid var(--surface-border)' }}>
-                <th scope="row" style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontSize: '13.5px', overflowWrap: 'anywhere' }}>{record.name}</th>
-                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
+                <th scope="row" style={{ fontSize: '13.5px', overflowWrap: 'anywhere' }}>{record.name}</th>
+                <td>
                   {record.noMoreRansomEntries.length > 0 ? (
                     <>
                       <StatusBadge label={lang === 'pt' ? 'Listado' : 'Listed'} tone="success" />
@@ -381,7 +381,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
                     <StatusBadge label={t.notListed} tone="secondary" />
                   )}
                 </td>
-                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
+                <td>
                   {record.malwareBazaarStatus === 'confirmed' ? (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '7px' }}>
                       <StatusBadge label={lang === 'pt' ? 'Confirmado' : 'Confirmed'} tone="success" />
@@ -399,21 +399,21 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ lang, onOpenFamily
                     </div>
                   )}
                 </td>
-                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+                <td style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
                   {record.malwareBazaarMatches.length > 0
                     ? record.malwareBazaarMatches.map((match) => (
                       <div key={match.url}>{match.count.toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US')}</div>
                     ))
                     : '—'}
                 </td>
-                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
+                <td>
                   <StatusBadge
                     label={presenceLabel(record.theZooStatus, lang)}
                     tone={record.theZooStatus === 'confirmed' ? 'success' : record.theZooStatus === 'not-confirmed' ? 'warning' : 'secondary'}
                   />
                   {record.theZooEntry && <div style={{ marginTop: '7px', fontFamily: 'var(--font-mono)', fontSize: '11.5px', color: 'var(--text-color-secondary)' }}>{record.theZooEntry}</div>}
                 </td>
-                <td style={{ padding: '10px 8px', verticalAlign: 'middle', textAlign: 'center' }}>
+                <td>
                   {record.documentedFamilyKey ? (
                     <button
                       type="button"

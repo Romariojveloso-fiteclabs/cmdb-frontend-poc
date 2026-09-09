@@ -42,7 +42,6 @@ export const TRANSLATIONS = {
     catalogTitle: "Explorar malwares",
     catalogSub:
       "Filtre por plataforma e pelas dimensões de status da documentação. Nenhum filtro representa garantia de validação completa.",
-    cardNote: "Hashes completos e método na página do estudo",
     clearFilters: "Limpar filtros",
     empty: "Nenhum resultado para esta combinação de busca e filtros.",
     backCatalog: "← Voltar ao catálogo",
@@ -132,7 +131,6 @@ export const TRANSLATIONS = {
     catalogTitle: "Explore malware",
     catalogSub:
       "Filter by platform and by the status dimensions of the documentation. No filter implies full validation.",
-    cardNote: "Full hashes and method live on the study page",
     clearFilters: "Clear filters",
     empty: "No results for this combination of search and filters.",
     backCatalog: "← Back to catalogue",

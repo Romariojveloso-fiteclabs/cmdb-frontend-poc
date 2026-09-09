@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Search, ShieldCheck, FilePlus, BookOpen, AlertTriangle } from 'lucide-react';
-import { FAMILIES, DIMENSIONS, Lang } from '../data/families';
+import { FAMILIES, Lang } from '../data/families';
+import { parseAllReportsFromMarkdown } from '../data/markdownLoader';
+import { FamilyCard } from './FamilyCard';
 import { TRANSLATIONS } from '../data/i18n';
 import { withBase } from '../utils/paths';
 
@@ -11,6 +13,13 @@ interface HomeViewProps {
   onSearch: (query: string) => void;
 }
 
+const ACTIVE_FAMILIES = FAMILIES.length;
+const PUBLISHED_REPORTS = parseAllReportsFromMarkdown().length;
+const DOCUMENTED_SAMPLES = FAMILIES.reduce((sum, f) => sum + f.samples, 0);
+const VERIFIABLE_EVIDENCE = ACTIVE_FAMILIES
+  ? Math.round((100 * FAMILIES.filter((f) => f.ev === 'observed').length) / ACTIVE_FAMILIES)
+  : 0;
+
 export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFamily, onSearch }) => {
   const t = TRANSLATIONS[lang];
   const [queryInput, setQueryInput] = useState('');
@@ -18,10 +27,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
   const featuredFamilies = FAMILIES.slice(0, 3);
 
   const stats = [
-    { n: '06', label: lang === 'pt' ? 'Famílias ativas' : 'Active families' },
-    { n: '05', label: lang === 'pt' ? 'Relatórios publicados' : 'Published reports' },
-    { n: '11', label: lang === 'pt' ? 'Amostras documentadas' : 'Documented samples' },
-    { n: '100%', label: lang === 'pt' ? 'Evidência verificável' : 'Verifiable evidence' }
+    { n: String(ACTIVE_FAMILIES).padStart(2, '0'), label: lang === 'pt' ? 'Famílias ativas' : 'Active families' },
+    { n: String(PUBLISHED_REPORTS).padStart(2, '0'), label: lang === 'pt' ? 'Relatórios publicados' : 'Published reports' },
+    { n: String(DOCUMENTED_SAMPLES).padStart(2, '0'), label: lang === 'pt' ? 'Amostras documentadas' : 'Documented samples' },
+    { n: `${VERIFIABLE_EVIDENCE}%`, label: lang === 'pt' ? 'Evidência verificável' : 'Verifiable evidence' }
   ];
 
   const heroLines = lang === 'pt'
@@ -63,25 +72,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
     if (queryInput.trim()) {
       onSearch(queryInput.trim());
     }
-  };
-
-  const renderBadge = (dimKey: string, valKey: string) => {
-    const meta = DIMENSIONS[dimKey]?.[valKey];
-    if (!meta) return null;
-    const label = lang === 'pt' ? meta.pt : meta.en;
-    
-    let bg = 'var(--surface-100)';
-    let color = 'var(--text-color-secondary)';
-    if (meta.sev === 'success') { bg = 'var(--success-soft)'; color = 'var(--success-600)'; }
-    if (meta.sev === 'info') { bg = 'var(--info-soft)'; color = 'var(--info-600)'; }
-    if (meta.sev === 'warning') { bg = 'var(--warning-soft)'; color = 'var(--warning-600)'; }
-    if (meta.sev === 'danger') { bg = 'var(--danger-soft)'; color = 'var(--danger-600)'; }
-
-    return (
-      <span style={{ background: bg, color: color, fontSize: '11px', fontFamily: 'var(--font-sans)', padding: '2px 8px', borderRadius: '4px', fontWeight: 500 }}>
-        {label}
-      </span>
-    );
   };
 
   return (
@@ -229,62 +219,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ lang, onNavigate, onOpenFami
           </button>
         </div>
 
-        <div className="home-family-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px' }}>
+        <div className="home-family-grid card-grid card-grid--3">
           {featuredFamilies.map((f) => (
-            <article key={f.key} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '19px', fontWeight: 600, letterSpacing: '.06em', color: 'var(--text-color)' }}>
-                    {f.name}
-                  </div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-color-secondary)', marginTop: '6px' }}>
-                    {lang === 'pt' ? f.headline.pt : f.headline.en}
-                  </div>
-                </div>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.12em', color: 'var(--info-color)', whiteSpace: 'nowrap' }}>
-                  {f.cat}
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', borderTop: '1px solid var(--surface-border)', paddingTop: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-color-secondary)', textTransform: 'uppercase' }}>
-                    {lang === 'pt' ? 'EDITORIAL' : 'EDITORIAL'}
-                  </span>
-                  {renderBadge('ed', f.ed)}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-color-secondary)', textTransform: 'uppercase' }}>
-                    {lang === 'pt' ? 'EVIDÊNCIA' : 'EVIDENCE'}
-                  </span>
-                  {renderBadge('ev', f.ev)}
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginTop: 'auto' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-color-secondary)' }}>{f.report}</span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', color: 'var(--text-color-secondary)' }}>
-                    {lang === 'pt' ? 'Atualizado em ' : 'Updated '} {f.updated}
-                  </span>
-                </div>
-                <button
-                  onClick={() => onOpenFamily(f.key)}
-                  style={{
-                    background: 'transparent',
-                    border: '1px solid var(--input-border)',
-                    borderRadius: '4px',
-                    padding: '6px 12px',
-                    fontSize: '12.5px',
-                    fontWeight: 500,
-                    color: 'var(--text-color)',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {t.viewStudy}
-                </button>
-              </div>
-            </article>
+            <FamilyCard key={f.key} family={f} lang={lang} onOpen={onOpenFamily} />
           ))}
         </div>
       </section>

@@ -667,6 +667,96 @@ html {
   overflow-wrap: break-word;
 }
 
+.page-intro {
+  width: 100%;
+  margin: 0 0 26px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-color-secondary);
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.content-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 18px;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+}
+
+.content-card.family-card {
+  padding: 16px;
+}
+
+.results-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.data-table-shell {
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  overflow-x: auto;
+  background: var(--surface-card);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+}
+
+.data-table thead tr {
+  background: var(--table-header-background);
+  color: var(--table-header-text);
+}
+
+.data-table thead th {
+  padding: 12px 10px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.data-table td,
+.data-table tbody th {
+  padding: 14px 10px;
+  vertical-align: middle;
+  text-align: center;
+  font-weight: 400;
+}
+
+.data-table tbody tr {
+  border-top: 1px solid var(--surface-border);
+}
+
+.data-table--roomy tbody tr { height: 85px; }
+
+.catalog-card-grid .family-card { min-height: 244px; }
+
+.data-table--comfortable tbody tr { height: 85px; }
+
 .report-toc__link {
   display: flex;
   gap: 10px;
@@ -987,6 +1077,8 @@ svg {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
+  .card-grid--2,
+  .card-grid--3,
   .home-family-grid,
   .catalog-card-grid,
   .guides-grid,
@@ -1321,6 +1413,10 @@ svg {
   .document-card,
   .content-panel {
     padding: 22px 16px !important;
+  }
+
+  .content-card {
+    padding: 16px 14px !important;
   }
 
   .markdown-body {
