@@ -63,26 +63,17 @@ export const GuidesView: React.FC<GuidesViewProps> = ({
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
         {t.guidesPageTitle}
       </h1>
-      <p style={{ fontSize: '14.5px', color: 'var(--text-color-secondary)', margin: '0 0 28px', maxWidth: '70ch' }}>
+      <p className="page-intro">
         {t.guidesPageSub}
       </p>
 
-      <div className="guides-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+      <div className="guides-grid card-grid card-grid--2">
         {guidesList.map((g) => (
           <article
             key={g.id}
             onClick={() => onOpenGuide(g.id)}
-            style={{
-              background: 'var(--surface-card)',
-              border: '1px solid var(--surface-border)',
-              borderRadius: '6px',
-              padding: '24px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '14px',
-              cursor: 'pointer',
-              transition: 'border-color .15s, box-shadow .15s'
-            }}
+            className="content-card"
+            style={{ gap: '14px', cursor: 'pointer', transition: 'border-color .15s, box-shadow .15s' }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.12em', color: 'var(--info-color)' }}>

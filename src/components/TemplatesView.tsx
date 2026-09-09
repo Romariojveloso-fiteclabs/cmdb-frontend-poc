@@ -28,7 +28,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
         {t.tplTitle}
       </h1>
-      <p style={{ fontSize: '15px', color: 'var(--text-color-secondary)', margin: '0 0 24px', maxWidth: '70ch' }}>
+      <p className="page-intro">
         {t.tplSub}
       </p>
 
@@ -39,9 +39,9 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({ lang }) => {
         </span>
       </div>
 
-      <div className="templates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
+      <div className="templates-grid card-grid card-grid--2">
         {templates.map((tp) => (
-          <article key={tp.id} style={{ background: 'var(--surface-card)', border: '1px solid var(--surface-border)', borderRadius: '6px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <article key={tp.id} className="content-card" style={{ gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', letterSpacing: '.12em', color: 'var(--info-color)' }}>
                 {tp.id}

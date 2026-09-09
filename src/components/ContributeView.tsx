@@ -16,7 +16,7 @@ export const ContributeView: React.FC<ContributeViewProps> = ({ lang }) => {
       <h1 style={{ fontFamily: 'var(--font-accent)', fontSize: '34px', fontWeight: 600, margin: '0 0 8px' }}>
         {t.contribPageTitle}
       </h1>
-      <p style={{ fontSize: '15px', color: 'var(--text-color-secondary)', margin: '0 0 32px', maxWidth: '70ch' }}>
+      <p className="page-intro">
         {t.contribPageSub}
       </p>
 
